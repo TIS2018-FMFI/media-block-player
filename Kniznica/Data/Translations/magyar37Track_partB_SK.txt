@@ -1,0 +1,7 @@
+﻿Informácia.||
+Prosím vás,| na ktoré nádražie ||prichádza vlak z Varšavy?|||
+Na Východné nádražie.||
+Na koľkiatu koľaj prichádza?||
+Na piatu.|||
+Z ktorej koľaje |odchádza vlak do Szegedu?||
+Z druhej koľaje.
