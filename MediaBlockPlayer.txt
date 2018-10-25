@@ -1,0 +1,95 @@
+A) Poznamky zo stretnutia
+
+Aplikacia media block player ma sluzit ako pomoc pri studovani cudzich jazykov ako samouk. Funguje na principe rozdelenia textu na male bloky, ktore si nasledne pustam, mozem si ich sam nahlas opakovat alebo iba pocuvat, preto ma nazov media block player. Ma byt schopna vytvorit synchronizacny subor s casovymi znackami na zaklade prilozeneho audio suboru a textoveho suboru, v ktorom je text rozdeleny do blokov na zaklade znaku “|”. Tento subor si nasladne viem ulozit do pocitaca na disk, alebo ho nahrat do online kniznice. Na zaklade tychto blokov treba pre audio subor vytvorit casove znamky, teda kde jednotlive bloky koncia. V aplikacii si uzivatel vie vybrat z takto vyrobenych materialov a prehravat si bloky s vyznacenym textom ktory sa prave prehrava v audiu. Uzivatel ma moznost si subory vybrat bud z disku svojho pocitaca alebo z online kniznice. Uzivatel si vie navyse nastavit rozne nastavenia, ci chce bloky prehravat zaradom alebo pomiesane, ci chce pouzit nejaky z dostupnych paralelnych prekladov, teda pri danom bloku by sa mu zobrazoval aj jeho preklad v jazyku ktoremu uz rozumie. Dalej ma byt vytvorena online kniznica, do ktorej ludia mozu nahravat materialy vytvorene pomocou aplikacie a vedia si material klasifikovat na zaklade cudzieho jazyka, urovne a tagov. Aplikacia ma byt naprogramovana pomocou webovych technologii (html/css/javascript) plus serverovy jazyk pre online kniznicu a ma byt schopna fungovat online aj offline (na stranke si viem stiahnut html/css/javascript subory a zapnut si aplikaciu v prehliadaci, funguje tak isto ako online bez moznosti pristupu ku online kniznici).
+---------------------------------
+
+B) Zoznam poziadaviek:
+
+- aby aplikacia vedela fungovat online aj offline (stranku si viem lokalne stiahnut a spustit v prehliadaci, funguje tak isto ako online bez moznosti pristupu ku online kniznici)
+
+Casti aplikacie:
+
+1. sowftware-ova cast pre vytvorenie synchronizacneho suboru s casovymi znamkami pre dane audio a suboru s prepisanym audiom do textovej podoby oddelene blokmi
+- nahratie audio suboru z disku pocitaca
+- nahratie textoveho suboru obsahujuceho text oddeleny blokmi k danemu audiu
+- postupne zobrazovanie blokov a zastavovanie audia pomocou klavesovych skratiek tak, aby audio vzdy sedelo k danemu bloku, teda ziskat casovu znacku pre koniec kazdeho bloku. Ak je dana cast audia prazdna, teda neobsahuje ziadny text, oznacit ju ako blok ktory nechcem prehravat
+- synchronizacny subor s casovymi znackami bude mat rovnaky nazov ako audio subor a priponu .mbpsf (media block player sync file)
+
+
+2. vyber medii a nastavenia
+- vyber medii na prehravanie (audio subor, synchronizacny subor s casovymi znackami, subory s paralernymi prekladmi)
+- nastavenia parametrov prehravanie
+	- dlzka pauzy medzi blokmi (v sekundach alebo nekonecna pauza - caka na stlacenie klavesy pauza)
+	- pocet opakovani bloku (repeat)
+	- dlzka pauzy medzi opakovaniami bloku (pause)
+	- dlzka pauzy pred prehratim bloku (pause_before_play: v sek. alebo caka na klavesu pauza)
+	- smer prehravania (forward alebo nahodne pomiesane bloky) (direction)
+	- obmedzenie zaciatku a konca prehravania (block_from, block_to)
+	- zobrazenie originalneho skriptu (script: True/False)
+	- zobrazenie vybraneho paralelneho prekladu (transl: True/False)
+
+- pre zjednodusenie nastavenia pouzivatelom budu vytvorene predvolene skupiny nastaveni (rezimy). Pouzivatel si zvoli rezim a moze este upravit zvolene parametre.
+- rezimy a nastavenia:
+	- first listening:
+		- pause = 99  (caka na klavesu pauza)
+  		- repeat = 1
+  		- direction = 'F'
+  		- script = False
+  		- transl = True
+
+	- pronounciation training:
+		- pause = 0
+  		- repeat = 2
+		- pause_repeat = 2
+		- script = True
+		- transl = True
+
+	- pronounciation check:
+	 	- pause = 0
+		- pause_before_play = 99 (caka na klavesu pauza)
+		- script = True
+		- transl = True
+
+	- continual echoing:
+		- pause = 0
+	  	- script = True
+  		- transl = True
+  		- pause_before_play = .5
+
+	- speaking check:
+  		- pause_before_play = 99 (caka na klavesu pauza)
+  		- script = True
+  		- transl = True
+  		- repeat = 1
+  		- pause = 0
+
+	- prompting:
+  		- pause = 99 (caka na klavesu pauza)
+  		- repeat = 1
+  		- pause_repeat = 0
+  		- direction = 'F'
+  		- script = True
+  		- transl = False
+
+	- writing check:
+ 		- pause_before_play = 0
+ 		- pause = 99 (caka na klavesu pauza)
+ 		- pause_repeat = 0
+ 		- repeat = 2
+ 		- script = False
+ 		- transl = True
+
+
+3. prehravanie medii po blokoch
+- prehravanie zvolenych medii po blokoch sposobom na zaklade zvolenych nastaveni (zobrazovanie textov po blokoch, spustanie audia patriacim k blokom, zobrazovanie paralelnych prekladov)
+- tlacitko play, ktore spusti media podla nastaveni
+- tlacitko pause, ktore pozastavi material
+- tlacitko stop, ktore zrusi prehravanie vybranych aktualnych medii
+
+
+4. online kniznica zdielanych medii
+- moznost nahrania medii z disku pocitaca
+- moznost nahrania medii priamo z aplikacie (api pre upload)
+- moznost stiahnutia medii na disk pocitaca
+- moznost vybratia medii priamo z aplikacie (api pre zobrazenie medii a nasledny download) s
+- klasifikacia na zaklade originalneho jazyka, jazyka prekladu, urovne narocnosti (A-beginner,B-intermediate,C-advanced), autora, poskytovatela media
