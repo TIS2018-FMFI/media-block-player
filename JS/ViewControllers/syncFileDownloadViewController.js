@@ -10,12 +10,22 @@ class SyncFileDownloadViewController extends ViewController {
 
     renderHtml(html) {
         const htmlView = `
-            <section id="SyncFileDownloadViewController">
-                <h2 id="file-name-label"></h2>
-                <a id="file-download"></a>
-                <br>
-                <br>
-                <a href="index.html">Back to my menu</a>
+            <section id="SyncFileDownloadViewController" class="container">
+                <div class="row row-100">
+                    <div class="col s12">
+                        <h2 id="file-name-label" class="center"></h2>
+                    </div>
+                </div>
+                <div class="row row-50">
+                    <div class="col s12 center">
+                        <a id="file-download" class="waves-effect waves-light btn-large"><i class="material-icons right">get_app</i>DOWNLOAD</a>
+                    </div>
+                </div>
+                <div class="row row-100">
+                    <div class="col s12">
+                        <a class="btn right" href="index.html">Back to my menu</a>
+                    </div>
+                </div>
             </section>
         `;
         super.renderHtml(htmlView);

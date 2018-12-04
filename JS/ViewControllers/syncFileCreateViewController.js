@@ -11,26 +11,32 @@ class SyncFileCreateViewController extends ViewController {
         this.skipBlock = [] // End times of blocks marked as skipped
         this.textBlockIndex = 0; // Starting blocks array index
         this.actualSeek = 0; // Actual seek of audio
-        this.creatingDone = false;
+        this.creatingDone = false; // Last block was created
     }
 
     renderHtml(html) {
         const htmlView = `
-            <section id="SyncFileCreateViewController">
-                <h2 id="actual-text"></h2>
-                <br>
-                <input id="backward-speed" type="number" min="0.1" max="10" step="0.1" value="0.3">
-                <button id="backward-button">Backward</button>
-                <button id="play-pause-button">Play</button>
-                <button id="forward-button">Forward</button>
-                <input id="forward-speed" type="number" min="0.1" max="10" step="0.1" value="0.3">
-                <br><br>
-                <button id="play-actual-block-button">Play actual Block</button>
-                <button id="skip-block-button">Skip Block</button>
-                <button id="next-block-button">NEXT BLOCK</button>
-                <br>
-                <br>
-                <a href="index.html">Back to my menu</a>
+            <section id="SyncFileCreateViewController" class="container">
+                <div class="row row-150">
+                    <h2 id="actual-text" class="center"></h2>
+                </div>
+                <div class="row row-50 center">
+                    <input class="w-45 m-lr-10" id="backward-speed" type="number" min="0.1" max="10" step="0.1" value="0.3">
+                    <a class="btn m-lr-10" id="backward-button"><i class="material-icons">fast_rewind</i></a>
+                    <a class="btn m-lr-10" id="play-pause-button"><i id="play-pause-icon" class="material-icons">play_circle_outline</i></a>
+                    <a class="btn m-lr-10" id="forward-button"><i class="material-icons">fast_forward</i></a>
+                    <input class="w-45 m-lr-10" id="forward-speed" type="number" min="0.1" max="10" step="0.1" value="0.3">
+                </div>
+                <div class="row row-50 center">
+                    <a id="play-actual-block-button" class="btn"><i class="material-icons right">replay</i>Play actual block</a>
+                </div>
+                <div class="row row-50 center">
+                    <a id="skip-block-button" class="btn m-lr-10">Skip block</a>
+                    <a id="next-block-button" class="btn m-lr-10">NEXT BLOCK</a>
+                </div>
+                <div class="row row-100">
+                    <a class="btn-small right" href="index.html">Back to my menu</a>
+                </div>
             </section>
         `;
         super.renderHtml(htmlView);
@@ -39,6 +45,7 @@ class SyncFileCreateViewController extends ViewController {
     setupProperties() {
         // Labels
         this.actualBlockText = $('#actual-text');
+        this.playPauseIcon = $('#play-pause-icon');
 
         // Inputs
         this.backwardSpeedInput = $('#backward-speed');
@@ -87,10 +94,10 @@ class SyncFileCreateViewController extends ViewController {
         if (this.sound.playing()) {
             this.sound.pause();
             this.actualSeek = this.sound.seek();
-            this.playPauseButton.text("Play");
+            this.playPauseIcon.text('play_circle_outline');
         } else {
             this.sound.play();
-            this.playPauseButton.text("Pause");
+            this.playPauseIcon.text('pause_circle_outline');
         }
     }
 
