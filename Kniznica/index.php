@@ -1,53 +1,35 @@
 <?php
+date_default_timezone_set('UTC');
 
-include('functions.php');
+session_start();
 
+include_once('page.php');
+include_once ('user.php');
+
+Page::page_header('Home');
+Page::page_navbar();
+
+//print_r($_SESSION);
 ?>
-<DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
+<main>
 
-  <link rel="stylesheet" href="style.css">
-
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
-
-  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-
-  <link rel="stylesheet" href="color_scheme.css">
-  <link rel="stylesheet" href="style.css">
-
-</head>
-<body>
-
-  <div class="jumbotron text-center w3-theme" style="margin-bottom:0">
-    <h1>Media Block Player: Shared database</h1>
-  </div>
-
-  <div class='container'>
-    <div class='jumbotrone w3-margin text-center'>
-      <p>
-        <h4>This is a shared database of knowledge compatible with our online training application that you can find: HERE</h4>
-      </p>
+    <div class="jumbotron center-align" style="padding: 5em 0 3em 0;">
+        <h1 style="margin:0">Media Block Player: Shared database</h1>
     </div>
-  </div>
 
-<div class='container table-responsive'>
-  <table class="table table-striped table-bordered">
+    <div class='container' style="margin-bottom: 2em">
+        <div class='center-align'>
+            <p>
+            <h5>This is a shared database of knowledge compatible with our online training application that you can find: HERE</h5>
+            </p>
+        </div>
+    </div>
+
     <?php
-      get_media_files();
+    Page::list_lectures();
     ?>
-</div>
 
-<footer class='container-fluid w3-theme-l4 text-center w3-padding'>
-
-  <small>&copy; Created by 'Prva skupina v zozname' as a school project, 2018</small>
-
-</foooter>
-
-</body>
-</html>
+</main>
+<?php
+Page::page_footer();
+?>
