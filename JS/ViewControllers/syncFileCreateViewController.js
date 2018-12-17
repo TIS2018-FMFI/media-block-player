@@ -1,3 +1,4 @@
+/// Class for creating synchornization file
 class SyncFileCreateViewController extends ViewController {
 
     constructor() {
@@ -74,6 +75,39 @@ class SyncFileCreateViewController extends ViewController {
         this.playActualBlockButton.on('click', this.playActualButtonClicked);
         this.skipBlockButton.on('click', this.skipBlockButtonClicked);
         this.nextBlockButton.on('click', this.nextBlockButtonClicked);
+
+        const jKey = 106;
+        const kKey = 107;
+        const lKey = 108;
+        const mKey = 109;
+        const nKey = 110;
+        const sKey = 115;
+        const self = this;
+
+        $(window).keypress(function(event) {
+            switch (event.which) {
+                case jKey:
+                    self.backwardButtonClicked();
+                    break;
+                case kKey:
+                    self.playPauseButtonClicked();
+                    break;
+                case lKey:
+                    self.forwardButtonClicked();
+                    break;
+                case mKey:
+                    self.playActualButtonClicked();
+                    break;
+                case nKey:
+                    self.nextBlockButtonClicked();
+                    break;
+                case sKey:
+                    self.skipBlockButtonClicked();
+                    break;
+                default:
+                    break;
+            }
+        });
     }
 
     viewDidLoad() {

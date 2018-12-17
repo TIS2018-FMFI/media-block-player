@@ -1,3 +1,5 @@
+/// Class for pick audio and script file for needed for creating
+/// synchornization file. Then you are able go to creating class
 class FilesPickerViewController extends ViewController {
 
     constructor() {
@@ -133,6 +135,9 @@ class FilesPickerViewController extends ViewController {
 
     // Helper Methods
 
+    /// This method is parsing text into blocks splitted by "|" character
+    /// @param text - text you want to split
+    /// @return method returns array of strings (blocks)
     parseBlocks(text) {
         var result = []
         const parsedBlocks = text.split("|");
@@ -145,6 +150,9 @@ class FilesPickerViewController extends ViewController {
         return result;
     }
 
+    /// Encode file to base64 encoding
+    /// @param file - file you want to encode
+    /// @return - base64 string of file
     getBase64(file) {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
