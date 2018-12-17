@@ -1,3 +1,4 @@
+/// Class for download created synchronization file
 class SyncFileDownloadViewController extends ViewController {
 
     constructor() {
@@ -42,6 +43,9 @@ class SyncFileDownloadViewController extends ViewController {
 
     // Private Methods
 
+    /// This method create json object from blocks end times array and
+    /// skip blocks array. Then it will create html download link with
+    /// {filename}.mbpsf file
     showSyncFileDownload() {
         const syncFileName = `${this.fileName}.mpbsf`;
         const syncFileObject = new Object();
