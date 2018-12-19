@@ -1,4 +1,9 @@
 <?php
+
+/**
+ * @author Martin Hrebeňár
+ */
+
 date_default_timezone_set('UTC');
 
 session_start();
@@ -9,29 +14,20 @@ include_once ('user.php');
 Page::page_header('Home');
 Page::page_navbar();
 
-if(isset($_POST['save_lecture'])){
-    echo "<pre>";
-    var_dump($_POST);
-    echo "</pre>";
-}
-
 ?>
 
-<main>
-
-    <div class="jumbotron center-align" style="padding: 5em 0 3em 0;">
-        <h1 style="margin:0">Media Block Player: Library</h1>
-    </div>
-
-    <div class='container' style="margin-bottom: 2em">
-        <div class='center-align'>
-            <h5>This is a library of lectures compatible with our online training application that you can find: HERE</h5>
-        </div>
-    </div>
+<main style="margin: 3em 0">
+    <?php
+        if(isset($_SESSION['msg'])){
+            Page::page_message($_SESSION['msg_status'], $_SESSION['msg']);
+            unset($_SESSION['msg']);
+            unset($_SESSION['msg_status']);
+        }
+    ?>
 
     <?php if(isset($_SESSION['id'])){?>
     <div class="fixed-action-btn">
-        <a class="btn-floating btn-large waves-effect waves-light purple lighten-1" href="lecture_add.php""><i class="material-icons">add</i></a>
+        <a class="btn-floating pulse btn-large waves-effect waves-light purple lighten-1" href="lecture_add.php""><i class="material-icons">add</i></a>
     </div>
     <?php
     }
@@ -46,9 +42,6 @@ Page::page_footer();
 
 <!-- Place for custom and page related scripts -->
 <script>
-    if(jQuery){console.log("JQ OK");}else console.log("JQ NotOK");
-
-
     // Or with jQuery
 
     $(document).ready(function(){
@@ -58,10 +51,13 @@ Page::page_footer();
 
     $("[data-lecture]").click(function () {
         console.log(this.getAttribute('data-lecture'));
-        $form_id = "#download_"+this.getAttribute('data-lecture');
+        $data = this.getAttribute('data-lecture');
+        $lec_id = this.getAttribute('data-lecture-id');
+        $form_id = "#download_"+ $data;
         $form = $($form_id);
         var lec_name = this.getAttribute('data-lecture-name');
 
+        $("#progress_bar_"+$data).show();
 
         var Promise = window.Promise;
         if (!Promise) {
@@ -106,12 +102,13 @@ Page::page_footer();
                 }
                 showMessage(msg);
                 updatePercent(metadata.percent|0);
+
             })
                 .then(function callback(blob) {
                     console.log("here we go");
-                    // see FileSaver.js
+                    plus_download_count($lec_id);
                     saveAs(blob, lec_name+".zip");
-
+                    $("#progress_bar_"+$data).hide();
                     showMessage("done !");
                 }, function (e) {
                     showError(e);
@@ -119,7 +116,22 @@ Page::page_footer();
 
             return false;
         });
-    })
+    });
+
+    function plus_download_count($lec_id){
+        $.ajax({
+            type: 'POST',
+            url: "./ajax_functions.php",
+            data:{
+                action: "increase_down_count",
+                lec_id: $lec_id,
+            },
+            dataType: 'json',
+            success:function(data){
+                //console.log(data);
+            }
+        })
+    }
 </script>
 
 <?php

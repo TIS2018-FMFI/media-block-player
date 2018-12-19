@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @author Martin Hrebeňár
+ */
+
 session_start();
 
 include_once ('user.php');
@@ -9,12 +13,24 @@ Page::page_header('Login');
 Page::page_navbar();
 
 if (isset($_POST['username']) && isset($_POST['password'])){
-    User::check_user($_POST['username'],  $_POST['password']);
+    if(!User::check_user($_POST['username'],  $_POST['password'])) {
+        $_SESSION['msg'] = "Your login credentials are invalid.";
+        $_SESSION['msg_status'] = "ERR";
+    }
 }
 
 ?>
 
 <main>
+
+    <?php
+    if(isset($_SESSION['msg'])){
+        Page::page_message($_SESSION['msg_status'], $_SESSION['msg']);
+        unset($_SESSION['msg']);
+        unset($_SESSION['msg_status']);
+    }
+    ?>
+
     <div class="container" style="margin-top: 10em; margin-bottom: 10em">
         <div class="row">
             <form id="login" class="col s6 offset-s4" method="post">

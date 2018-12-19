@@ -1,9 +1,17 @@
 <?php
 
+/**
+ * @author Martin Hrebeňár
+ */
+
 include_once ('db.php');
 
 class Lecture{
 
+    /**
+     * @return int
+     * returns count of all lectures in database
+     */
     public static function get_lectures_count(){
 
         global $mysqli;
@@ -15,6 +23,10 @@ class Lecture{
         return -1;
     }
 
+    /**
+     * @return array|null
+     * returns array of all languages from database
+     */
     public static function get_languages(){
         global $mysqli;
 
@@ -26,11 +38,18 @@ class Lecture{
             while ($row = $result->fetch_assoc()) {
                 array_push($res, $row);
             }
+            return $res;
         }
 
-        return $res;
+        return NULL;
     }
 
+    /**
+     * @param int $offset - offset by which lectures will be offset when selecting from database
+     * @param int $limit - limit of how many lectures can be obtained from database
+     * @return array|null
+     * returns array of lectures which are limited and offset by parameters to be able to create pagination
+     */
     public static function get_lectures($offset, $limit){
         global $mysqli;
 
@@ -42,12 +61,18 @@ class Lecture{
             while ($row = $result->fetch_assoc()) {
                 array_push($res, array('data'=>$row, 'trans'=> self::get_lecture_translations($row['id'])));
             }
+            return $res;
         }
 
-        return $res;
+        return NULL;
     }
 
-    private static function get_lecture_translations($lecture_id){
+    /**
+     * @param int $lecture_id - id of lecture
+     * @return array
+     * returns array of translations associated with lecture with given id
+     */
+    public static function get_lecture_translations($lecture_id){
         global $mysqli;
 
         $res = array();
@@ -55,14 +80,23 @@ class Lecture{
         $sql = "SELECT t.id, t.name, t.trans_link, l.name as l_name, l.abbr FROM mbp_translations as t join mbp_languages as l on t.language_id = l.id where lecture_id = $lecture_id";
         if(!$mysqli->connect_errno){
             $result = $mysqli->query($sql);
+
+            if (mysqli_num_rows($result) == 0) return NULL;
+
             while($row = $result->fetch_assoc()){
                 array_push($res,$row);
             }
+            return $res;
         }
-        //var_dump($res);
-        return $res;
+        return NULL;
     }
 
+    /**
+     * @param array $data - passed $_POST variable
+     * @param int $user_id - id of user who is saving lecture
+     * @return int|mixed
+     * creates new entry in database and returns the id of newly created lecture
+     */
     public static function save_lecture($data, $user_id){
         global $mysqli;
 
@@ -71,7 +105,7 @@ class Lecture{
         $lec_diff = $data['lecture_diff'];
         $lec_lang = $data['lecture_lang'];
         $lec_txt = 'Data/Scripts/'.$lec_tit.'.txt';
-        $lec_syn = 'Data/Syncs/'.$lec_tit.'.txt';
+        $lec_syn = 'Data/Syncs/'.$lec_tit.'.mbpsf';
 
         $sql = "INSERT INTO mbp_lectures (name, description, difficulty, language_id, user_id, audio_link, text_link, sync_file_link)
                 VALUES ('$lec_tit', '$lec_desc', '$lec_diff', '$lec_lang', '$user_id', ' ', '$lec_txt', '$lec_syn')";
@@ -87,6 +121,14 @@ class Lecture{
         return $new_id;
     }
 
+    /**
+     * @param array $files - passed $_FILES variable
+     * @param String $lecture_name - name of the lecture
+     * @param int $lec_id - id of the lecture
+     * @return bool
+     * saves all files provided when creating lecture and creates associations of the files and lecture in database
+     * returns true
+     */
     public static function save_lecture_files($files, $lecture_name, $lec_id){
 
         if(self::save_one_file($files['lecture_media'], "Media", $lecture_name)){
@@ -100,6 +142,12 @@ class Lecture{
         return true;
     }
 
+    /**
+     * @param array $files - passed $_FILES variable
+     * @param array $trans_data - passed $_POST variable
+     * @param int $lec_id - id of the lecture
+     * saves translation files provided when creating lecture and call function that saves it to database
+     */
     public static function save_lecture_translations($files, $trans_data, $lec_id){
 
         $lecture_name = $trans_data['lecture_title'];
@@ -115,6 +163,15 @@ class Lecture{
 
     }
 
+    /**
+     * @param String $file - path of translation file
+     * @param String $lecture_name - name of the lecture
+     * @param int $lec_id - id of the lecture
+     * @param int $lang_id - id of language of translation
+     * @return bool
+     * creates new entry for translation in database with association to given lecture and language
+     * returns false when insertion failed
+     */
     private static function insert_translation($file, $lecture_name, $lec_id, $lang_id){
         global $mysqli;
 
@@ -129,6 +186,13 @@ class Lecture{
         return false;
     }
 
+    /**
+     * @param String $file - path of media file
+     * @param int $lec_id - id of the lecture
+     * @return bool
+     * updates media file column for given lecture
+     * returns false when update failed
+     */
     private static function update_lecture_media_file($file, $lec_id){
         global $mysqli;
 
@@ -141,6 +205,15 @@ class Lecture{
         return false;
     }
 
+    /**
+     * @param Object $file - concrete file from $_FILES variable
+     * @param String $module - name of module that file belongs to one from ['Media', 'Translations', 'Syncs', 'Scripts']
+     * @param String $lecture_name - name of the lecture
+     * @param int $salt - number to be added to a file name so that two files will not have same name
+     * @return bool
+     * saves uploaded file to correct place on server
+     * return false if this procedure failed
+     */
     private static function save_one_file($file, $module, $lecture_name, $salt = 0){
 
         $target_dir = "Data/".$module."/";

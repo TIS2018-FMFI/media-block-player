@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @author Martin Hrebeňár
+ */
+
 session_start();
 
 include_once ('user.php');
@@ -15,6 +19,8 @@ if(isset($_POST['save_lecture'])){
     //var_dump($_FILES);
     //echo "</pre>";
 
+    //var_dump(check_files($_FILES, $_POST['trans_count']));
+
     if(!check_files($_FILES, $_POST['trans_count'])) echo "ERROR FILES";
     else{
 
@@ -23,12 +29,16 @@ if(isset($_POST['save_lecture'])){
         Lecture::save_lecture_translations($_FILES, $_POST,$lec_id);
 
         unset($_POST);
+        header('location: index.php');
     }
 
 }
 
-
-Page::lecture_add();
+if(!isset($_SESSION['id'])){
+    Page::error_card("You must be logged in to be able to add new lecture.");
+}else {
+    Page::lecture_add();
+}
 
 Page::page_footer();
 ?>

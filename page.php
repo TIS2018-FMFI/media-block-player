@@ -1,10 +1,18 @@
 <?php
 
+/**
+ * @author Martin Hrebeňár
+ */
+
 include_once ('lecture.php');
 include_once ('user.php');
 
 class Page{
 
+    /**
+     * @param String $title, title of the page
+     * function inserts head of the page
+     */
     public static function page_header($title){
         ?>
         <!DOCTYPE html>
@@ -13,8 +21,6 @@ class Page{
             <meta charset="utf-8">
 
             <meta name="viewport" content="width=device-width, initial-scale=1">
-            <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
-            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>-->
             <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
@@ -44,28 +50,38 @@ class Page{
         <?php
     }
 
+    /**
+     *  function inserts navigation bar to page
+     */
 public static function page_navbar(){
     ?>
 <body>
     <header>
         <nav>
             <div class="nav-wrapper blue" style="padding: 0 2em;">
-                <a href="index.php" class="brand-logo">MBP</a>
+                <a href="index.php" class="brand-logo">MBP - Library</a>
                 <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
                 <ul class="right hide-on-med-and-down">
+                    <li>
+                        <a class="waves-effect btn grey lighten-2 black-text" href="#">Application</a>
+                    </li>
                     <?php if (isset($_SESSION['id'])){ ?>
-                        <li class="waves-effect">
+                        <li>
                             <a class="waves-effect btn light-blue accent-3" href="profile.php?id=<?php echo $_SESSION['id']?>">Profile</a>
                         </li>
-                        <li class="waves-effect">
+                        <li>
                             <a class="waves-effect btn red lighten-2" href="logout.php">Logout</a>
                         </li>
-                    <?php }else{ ?>
+                        <?php if($_SESSION['admin'] == 1){?>
+                            <li>
+                                <a class="waves-effect btn red white-text text-darken-2 accent-3" href="admin.php">Admin Zone</a>
+                            </li>
+                        <?php }}else{ ?>
 
-                        <li class="waves-effect">
+                        <li>
                             <a class="waves-effect btn green lighten-1" href="login.php">Login</a>
                         </li>
-                        <li class="waves-effect">
+                        <li>
                             <a class="waves-effect btn green darken-1" href="register.php">Register</a>
                         </li>
                     <?php } ?>
@@ -74,6 +90,9 @@ public static function page_navbar(){
         </nav>
 
         <ul class="sidenav" id="mobile-demo">
+            <li class="nav-item">
+                <a class="nav-link" href="#">Application</a>
+            </li>
             <?php if (isset($_SESSION['id'])){ ?>
                 <li class="nav-item">
                     <a class="nav-link" href="profile.php?id=<?php echo $_SESSION['id']?>">Profile</a>
@@ -95,9 +114,18 @@ public static function page_navbar(){
     <?php
 }
 
+    /**
+     *  function inserts footer to page
+     */
     public static function page_footer(){
         ?>
         <footer class='page-footer blue'>
+            <div class="container">
+                <div class="row center-align ">
+                    <div class="col s4 m2"><a class="grey-text text-lighten-3" href="faq.php">FAQ</a></div>
+                    <div class="col s4 m2"><a class="grey-text text-lighten-3" href="contacts.php">Contacts</a></div>
+                </div>
+            </div>
             <div class="footer-copyright">
                 <div class="container">
                     &copy; Created by 'Prvá skupina v zozname' as a school project, 2018
@@ -124,6 +152,9 @@ public static function page_navbar(){
     }
 
 
+    /**
+     *  function inserts closing tags for page
+     */
     public static function page_foot(){
         ?>
         </body>
@@ -131,10 +162,13 @@ public static function page_navbar(){
         <?php
     }
 
+    /**
+     *  lists all lections from database, also takes care of pagination
+     */
     public static function list_lectures(){
-        $page_entries = 7;
+        $page_entries = 5;
         $start_from = 0;
-        if (isset($_GET['page'])) $start_from = (($_GET['page']-1) * $page_entries)+2;
+        if (isset($_GET['page'])) $start_from = ($_GET['page']-1) * $page_entries;
 
         echo "<div class='container'>";
         echo "<table class='table'>";
@@ -145,7 +179,7 @@ public static function page_navbar(){
         echo "<th>Lecture Language</th>";
         echo "<th>Difficulty</th>";
         echo "<th>Added</th>";
-        echo "<th>Updated</th>";
+        echo "<th>Downloads</th>";
         echo "<th></th>";
         echo "</tr></thead>";
 
@@ -160,6 +194,7 @@ public static function page_navbar(){
             $lecture_id = $lecture['data']['id'];
             $lecture_lang = $lecture['data']['l_name'];
             $lecture_diff = $lecture['data']['difficulty'];
+            $lecture_down_count = $lecture['data']['download_count'];
 
 
             echo "<tr>";
@@ -168,19 +203,19 @@ public static function page_navbar(){
             echo "<td>$lecture_lang</td>";
             echo "<td>$lecture_diff</td>";
             echo "<td></td>";
-            echo "<td></td>";
-            echo "<td><a class='waves-effect waves-blue btn blue modal-trigger' href='#$modalname'>$lecture_name</a></td>";
+            echo "<td>$lecture_down_count x</td>";
+            echo "<td><a class='waves-effect waves-blue btn blue modal-trigger' href='#$modalname'><i class='fa fa-search'></i></a></td>";
             echo "</tr>";
 
         }
 
 
         echo "</tbody></table><ul class='pagination'>";
-        echo "<li class='disabled'><a href='#!'><i class='material-icons'>chevron_left</i></a></li>";
-        /*for ($i = 1; $i <= (count(scandir("Data/A-V sources")) / $page_entries)+1; $i++){
-            if ((isset($_GET['page']) && $i == $_GET['page']) || $i == 1) echo "<li class='active blue'><a href='?page=$i'>$i</a></li>";
+        echo "<li class='waves-effect'><a href='#!'><i class='material-icons'>chevron_left</i></a></li>";
+        for ($i = 1; $i <= ($lectures_count / $page_entries)+1; $i++){
+            if ((isset($_GET['page']) && $i == $_GET['page']) || (!isset($_GET['page']) && $i == 1 )) echo "<li class='active blue'><a href='?page=$i'>$i</a></li>";
             else echo "<li class='waves-effect'><a href='?page=$i'>$i</a></li>";
-        }*/
+        }
         echo "<li class='waves-effect'><a href='#!'><i class='material-icons'>chevron_right</i></a></li>";
         echo "</ul>";
         echo "</div>";
@@ -188,6 +223,7 @@ public static function page_navbar(){
         foreach ($lectures as $lecture) {
             $modalname = hash('md5', $lecture['data']['id']+$lecture['data']['name']);
             $lecture_desc = $lecture['data']['description'];
+            $lecture_id = $lecture['data']['id'];
             $lecture_media_link = $lecture['data']['audio_link'];
             $lecture_text_link = $lecture['data']['text_link'];
             $lecture_sync_link = $lecture['data']['sync_file_link'];
@@ -237,12 +273,12 @@ public static function page_navbar(){
                     </form>
 
                     <div class='modal-footer'>
-                        <div class="progress hide" id="progress_bar_<?php echo $modalname ?>">
-                            <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0;">
-                            </div>
+
+                        <div class="progress" id="progress_bar_<?php echo $modalname ?>" style="display: none">
+                            <div class="indeterminate"></div>
                         </div>
                         <p class="hide" id="result_<?php echo $modalname ?>"></p>
-                        <button type="submit" form="download_<?php echo $modalname ?>" class="download_lecture btn green waves-effect" data-lecture-name="<?php echo$lecture_name ?>" data-lecture="<?php echo $modalname ?>">Download all</button>
+                        <button type="submit" form="download_<?php echo $modalname ?>" class="download_lecture btn green waves-effect" data-lecture-id="<?php echo $lecture_id ?>" data-lecture-name="<?php echo$lecture_name ?>" data-lecture="<?php echo $modalname ?>">Download all</button>
                         <a href='#' class='modal-close waves-effect waves-blue btn blue'>Close</a>
                     </div>
                 </div>
@@ -252,138 +288,115 @@ public static function page_navbar(){
         }
     }
 
+    /**
+     * @param String $err - message to be printed in card
+     * inserts an error card with error message
+     */
+    public static function error_card($err){
+        ?>
+        <main style="margin: 3em 0">
+            <div class="container">
+                <div class="row" style="padding: 5em">
+                    <div class="col s12">
+                        <div class="card red lighten-2">
+                            <div class="card-content white-text">
+                                <span class="card-title">Error</span>
+                                <p><?php echo $err ?></p>
+                            </div>
+                            <div class="card-action">
+                                <a href="index.php" class="grey-text text-lighten-2">Go HOME</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <?php
+    }
+
+    /**
+     * @param String $warning - message to be printed in card
+     * inserts an warning card with error message
+     */
+    public static function warning_card($warning){
+        ?>
+        <main style="margin: 3em 0">
+            <div class="container">
+                <div class="row valign-wrapper" style="padding: 5em">
+                    <div class="col s12">
+                        <div class="card orange lighten-2">
+                            <div class="card-content white-text">
+                                <span class="card-title">Warning</span>
+                                <p><?php echo $warning ?></p>
+                            </div>
+                            <div class="card-action">
+                                <a href="index.php" class="grey-text text-lighten-2">Go HOME</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <?php
+    }
+
+    /**
+     * @param String $status - from [ 'OK', 'ERR', 'ERR'], defines type of message
+     * @param String $msg - message to be printed
+     * initialize SESSION parameters so next page that can process message will show it to user
+     */
+    public static function page_message($status, $msg){
+        $color = "";
+        //var_dump($status);
+        if(strcmp($status, "OK") == 0) $color = "green";
+        else if(strcmp($status, "WAR") == 0) $color = "orange";
+        else if(strcmp($status, "ERR") == 0) $color = "red";
+
+        ?>
+        <div class="container lighten-1 <?php echo $color ?>">
+            <div class="row">
+                <div class="col s10 offset-s1 white-text" style="padding: 1em;">
+                    <p><?php echo $msg ?></p>
+                </div>
+            </div>
+        </div>
+        <?php
+    }
+
+    /**
+     * @param int $id - id of profile
+     * prints profile for user or error card if user can not be found
+     */
     public static function profile_detail($id){
         $user = User::get_user_profile($id);
         //echo "<pre>";
         //var_dump($user);
         //echo "</pre>";
 
-        ?>
-        <main>
-            <div class="container">
-                <div class="row" style="margin-top: 3em">
-                    <div class="col s4 offset-s4">
-                        <div class="card" style="padding-top: 1em">
-                            <div class="container">
-                                <?php if($user['image'] != NULL){ ?>
-                                    <img src="Pictures/Profiles/<?php echo $user['image'] ?>" class="circle" style="max-width: 100%">
-                                <?php } else { ?>
-                                    <img src="Pictures/Placeholders/user_placeholder.svg" style="max-width: 150px; margin: auto">
-                                <?php } ?>
-                            </div>
-                            <div class="row">
-                                <div class="col s12 center-align">
-                                    <h4><?php echo $user['username'] ?></h4>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="container">
-                <div class="fixed-action-btn">
-                    <a class="btn-floating btn-large  waves-effect waves-light red lighten-1" href="profile.php?id=<?php echo $user['id'].'&edit' ?>"><i class="material-icons">edit</i></a>
-                </div>
-                <hr class="" style="border-color: #f0f0f0">
-            </div>
-            <div class="container">
-                <div class="row valign-wrapper">
-                    <div class="col s6 right-align" style="border-right: 1px dotted #f0f0f0">
-                        <b>Name:</b>
-                    </div>
-                    <div class="col s6">
-                        <?php echo $user['first_name']." ".$user['last_name'] ?>
-                    </div>
-                </div>
-
-                <div class="row valign-wrapper">
-                    <div class="col s6 right-align" style="border-right: 1px dotted #f0f0f0">
-                        <b>Username:</b>
-                    </div>
-                    <div class="col s6">
-                        <?php echo $user['username'] ?>
-                    </div>
-                </div>
-
-                <div class="row valign-wrapper">
-                    <div class="col s6 right-align" style="border-right: 1px dotted #f0f0f0">
-                        <b>E-mail:</b>
-                    </div>
-                    <div class="col s6">
-                        <?php echo $user['email'] ?>
-                    </div>
-                </div>
-
-                <div class="row valign-wrapper">
-                    <div class="col s6 right-align" style="border-right: 1px dotted #f0f0f0">
-                        <b>Gender</b>
-                    </div>
-                    <div class="col s6">
-                        <?php
-                        if($user['gender'] == 'M') echo "Male";
-                        else if ($user['gender'] == 'F') echo "Female";
-                        else echo "";
-                        ?>
-                    </div>
-                </div>
-
-                <div class="row valign-wrapper">
-                    <div class="col s6 right-align" style="border-right: 1px dotted #f0f0f0">
-                        <b>Age:</b>
-                    </div>
-                    <div class="col s6">
-                        <?php echo $user['age'] ?>
-                    </div>
-                </div>
-
-
-                <div class="row valign-wrapper">
-                    <div class="col s6 right-align" style="border-right: 1px dotted #f0f0f0">
-                        <b>Native language:</b>
-                    </div>
-                    <div class="col s6">
-                        <?php echo $user['name'] ?>
-                    </div>
-                </div>
-            </div>
-        </main>
-
-        <?php
-
-    }
-
-    public static function profile_edit($id){
-        $user = User::get_user_profile($id);
-        //var_dump($id);
-
-        $languages = Lecture::get_languages();
-        //echo "<pre>";
-        //var_dump($user);
-        //var_dump($languages);
-        //echo "</pre>";
-
-        ?>
-        <main>
-            <form id="profile_edit" method="post" enctype="multipart/form-data" action="profile.php?id=<?php echo $user['id'] ?>">
+        if($user == NULL){
+            self::error_card("User with this ID does not exist.");
+        }else {
+            ?>
+            <main style="margin: 3em 0">
+                <?php
+                if(isset($_SESSION['msg'])){
+                    Page::page_message($_SESSION['msg_status'], $_SESSION['msg']);
+                    unset($_SESSION['msg']);
+                    unset($_SESSION['msg_status']);
+                }
+                ?>
                 <div class="container">
                     <div class="row" style="margin-top: 3em">
                         <div class="col s4 offset-s4">
-                            <div class="card" style="padding-top: 1em">
+                            <div class="card center-align" style="padding-top: 1em">
                                 <div class="container">
-                                    <?php if($user['image'] != NULL){ ?>
-                                        <img src="Pictures/Profiles/<?php echo $user['image'] ?>" class="circle" style="max-width: 100%">
+                                    <?php if ($user['image'] != NULL) { ?>
+                                        <img src="Pictures/Profiles/<?php echo $user['image'] ?>" class="circle"
+                                             style="max-width: 100%">
                                     <?php } else { ?>
-                                        <img src="Pictures/Placeholders/user_placeholder.svg" style="max-width: 150px; margin: auto">
+                                        <img src="Pictures/Placeholders/user_placeholder.svg"
+                                             style="max-width: 150px; margin: auto">
                                     <?php } ?>
-                                </div>
-                                <div class="file-field input-field col s8 offset-s2">
-                                    <div class="btn">
-                                        <span>Image</span>
-                                        <input type="file" name='picture' id='picture'>
-                                    </div>
-                                    <div class="file-path-wrapper">
-                                        <input class="file-path validate" type="text">
-                                    </div>
                                 </div>
                                 <div class="row">
                                     <div class="col s12 center-align">
@@ -395,94 +408,228 @@ public static function page_navbar(){
                     </div>
                 </div>
                 <div class="container">
+                    <div class="fixed-action-btn">
+                        <a class="btn-floating btn-large pulse waves-effect waves-light red lighten-1"
+                           href="profile.php?id=<?php echo $user['id'] . '&edit' ?>"><i class="material-icons">edit</i></a>
+                    </div>
                     <hr class="" style="border-color: #f0f0f0">
                 </div>
                 <div class="container">
-                    <div class="row">
-                        <div class="input-field col s12 m3 offset-m3">
-                            <input id="first_name" type="text" class="validate" data-error="#errorTxt1" name="first_name" value="<?php echo $user['first_name']?>">
-                            <label for="first_name">First name</label>
-                            <div class="f_error" id="errorTxt1"></div>
+                    <div class="row valign-wrapper">
+                        <div class="col s6 right-align" style="border-right: 1px dotted #f0f0f0">
+                            <b>Name:</b>
                         </div>
-                        <div class="input-field col s12 m3">
-                            <input id="last_name" type="text" class="validate" data-error="#errorTxt2" name="last_name" value="<?php echo $user['last_name'] ?>">
-                            <label for="last_name">Last name</label>
-                            <div class="f_error" id="errorTxt2"></div>
+                        <div class="col s6">
+                            <?php echo $user['first_name'] . " " . $user['last_name'] ?>
                         </div>
                     </div>
 
-                    <div class="row">
-                        <div class="input-field col s12 m6 offset-m3">
-                            <input id="username" type="text" class="validate" data-error="#errorTxt3" name="username" value="<?php echo $user['username'] ?>" required disabled>
-                            <label for="username">Username</label>
-                            <div class="f_error" id="errorTxt3"></div>
+                    <div class="row valign-wrapper">
+                        <div class="col s6 right-align" style="border-right: 1px dotted #f0f0f0">
+                            <b>Username:</b>
+                        </div>
+                        <div class="col s6">
+                            <?php echo $user['username'] ?>
                         </div>
                     </div>
 
-                    <div class="row">
-                        <div class="input-field col s12 m6 offset-m3">
-                            <input id="email" type="email" class="validate" data-error="#errorTxt4" name="email" required value="<?php echo $user['email'] ?>">
-                            <label for="email">E-mail address</label>
-                            <div class="f_error" id="errorTxt4"></div>
+                    <div class="row valign-wrapper">
+                        <div class="col s6 right-align" style="border-right: 1px dotted #f0f0f0">
+                            <b>E-mail:</b>
+                        </div>
+                        <div class="col s6">
+                            <?php echo $user['email'] ?>
                         </div>
                     </div>
 
-                    <div class="row">
-                        <div class="input-field col s6 m3 offset-m3">
-                            <input type="number" name="age" id="age" min="0" max="99" value="<?php echo $user['age'] ?>">
-                            <label for="age">Age</label>
+                    <div class="row valign-wrapper">
+                        <div class="col s6 right-align" style="border-right: 1px dotted #f0f0f0">
+                            <b>Gender</b>
                         </div>
-                        <div class="input-field col s6 m3">
-                            <select id="gender" name="gender">
-                                <option value="" disabled selected>Choose gender...</option>
-                                <option value="M" <?php if($user['gender'] == 'M') echo "selected" ?>>Male</option>
-                                <option value="F" <?php if($user['gender'] == 'F') echo "selected" ?>>Female</option>
-                            </select>
-                            <label>Gender</label>
+                        <div class="col s6">
+                            <?php
+                            if ($user['gender'] == 'M') echo "Male";
+                            else if ($user['gender'] == 'F') echo "Female";
+                            else echo "";
+                            ?>
+                        </div>
+                    </div>
+
+                    <div class="row valign-wrapper">
+                        <div class="col s6 right-align" style="border-right: 1px dotted #f0f0f0">
+                            <b>Age:</b>
+                        </div>
+                        <div class="col s6">
+                            <?php echo $user['age'] ?>
                         </div>
                     </div>
 
 
-                    <div class="row">
-                        <div class="input-field col s12 m6 offset-m3">
-                            <select id="native_lang" name="native_lang">
-                                <option value="" selected disabled>Select your native language...</option>
-                                <?php
-                                foreach ($languages as $language){
-                                    ?>
-                                    <option value="<?php echo $language['id'] ?>" <?php if($user['native_lang_id'] == $language['id']) echo "selected" ?>><?php echo $language['name'] ?></option>
-                                    <?php
-                                }
-                                ?>
-                            </select>
-                            <label>Native language</label>
+                    <div class="row valign-wrapper">
+                        <div class="col s6 right-align" style="border-right: 1px dotted #f0f0f0">
+                            <b>Native language:</b>
+                        </div>
+                        <div class="col s6">
+                            <?php echo $user['name'] ?>
                         </div>
                     </div>
-
-                    <div class="row center-align">
-                        <div class="input-field col s6 m3 offset-m3">
-                            <button type="submit" class="btn green waves-effect" name="save_profile">Save changes
-                                <i class="material-icons right">check</i></button>
-                        </div>
-                        <div class="input-field col s6 m3">
-                            <a href="profile.php?id=<?php echo $user['id'] ?>" class="btn red lighten-2 waves-effect">Discard changes
-                                <i class="material-icons right">clear</i></a>
-                        </div>
-                    </div>
-
                 </div>
-            </form>
-        </main>
-        <?php
+            </main>
 
+            <?php
+        }
     }
 
+    /**
+     * @param int $id - id of profile
+     * prints form for profile editing, or prints error car if user cannot be found
+     */
+    public static function profile_edit($id){
+        $user = User::get_user_profile($id);
+        //var_dump($id);
+
+        $languages = Lecture::get_languages();
+        //echo "<pre>";
+        //var_dump($user);
+        //var_dump($languages);
+        //echo "</pre>";
+        if($user == NULL){
+            self::error_card("User with this ID does not exist.");
+        }else {
+            ?>
+            <main style="margin: 3em 0">
+                <form id="profile_edit" method="post" enctype="multipart/form-data"
+                      action="profile.php?id=<?php echo $user['id'] ?>">
+                    <div class="container">
+                        <div class="row" style="margin-top: 3em">
+                            <div class="col s4 offset-s4">
+                                <div class="card center-align" style="padding-top: 1em">
+                                    <div class="container">
+                                        <?php if ($user['image'] != NULL) { ?>
+                                            <img src="Pictures/Profiles/<?php echo $user['image'] ?>" class="circle"
+                                                 style="max-width: 100%">
+                                        <?php } else { ?>
+                                            <img src="Pictures/Placeholders/user_placeholder.svg"
+                                                 style="max-width: 150px; margin: auto">
+                                        <?php } ?>
+                                    </div>
+                                    <div class="file-field input-field col s8 offset-s2">
+                                        <div class="btn">
+                                            <span>Image</span>
+                                            <input type="file" name='picture' id='picture' accept="image/jpeg">
+                                        </div>
+                                        <div class="file-path-wrapper">
+                                            <input class="file-path validate" type="text">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col s12 center-align">
+                                            <h4><?php echo $user['username'] ?></h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container">
+                        <hr class="" style="border-color: #f0f0f0">
+                    </div>
+                    <div class="container">
+                        <div class="row">
+                            <div class="input-field col s12 m3 offset-m3">
+                                <input id="first_name" type="text" class="validate" data-error="#errorTxt1"
+                                       name="first_name" value="<?php echo $user['first_name'] ?>">
+                                <label for="first_name">First name</label>
+                                <div class="f_error" id="errorTxt1"></div>
+                            </div>
+                            <div class="input-field col s12 m3">
+                                <input id="last_name" type="text" class="validate" data-error="#errorTxt2"
+                                       name="last_name" value="<?php echo $user['last_name'] ?>">
+                                <label for="last_name">Last name</label>
+                                <div class="f_error" id="errorTxt2"></div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="input-field col s12 m6 offset-m3">
+                                <input id="username" type="text" class="validate" data-error="#errorTxt3"
+                                       name="username" value="<?php echo $user['username'] ?>" required disabled>
+                                <label for="username">Username</label>
+                                <div class="f_error" id="errorTxt3"></div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="input-field col s12 m6 offset-m3">
+                                <input id="email" type="email" class="validate" data-error="#errorTxt4" name="email"
+                                       required value="<?php echo $user['email'] ?>">
+                                <label for="email">E-mail address</label>
+                                <div class="f_error" id="errorTxt4"></div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="input-field col s6 m3 offset-m3">
+                                <input type="number" name="age" id="age" min="0" max="99"
+                                       value="<?php echo $user['age'] ?>">
+                                <label for="age">Age</label>
+                            </div>
+                            <div class="input-field col s6 m3">
+                                <select id="gender" name="gender">
+                                    <option value="" disabled selected>Choose gender...</option>
+                                    <option value="M" <?php if ($user['gender'] == 'M') echo "selected" ?>>Male</option>
+                                    <option value="F" <?php if ($user['gender'] == 'F') echo "selected" ?>>Female
+                                    </option>
+                                </select>
+                                <label>Gender</label>
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="input-field col s12 m6 offset-m3">
+                                <select id="native_lang" name="native_lang">
+                                    <option value="" selected disabled>Select your native language...</option>
+                                    <?php
+                                    foreach ($languages as $language) {
+                                        ?>
+                                        <option value="<?php echo $language['id'] ?>" <?php if ($user['native_lang_id'] == $language['id']) echo "selected" ?>><?php echo $language['name'] ?></option>
+                                        <?php
+                                    }
+                                    ?>
+                                </select>
+                                <label>Native language</label>
+                            </div>
+                        </div>
+
+                        <div class="row center-align">
+                            <div class="input-field col s6 m3 offset-m3">
+                                <button type="submit" class="btn green waves-effect" name="save_profile">Save changes
+                                    <i class="material-icons right">check</i></button>
+                            </div>
+                            <div class="input-field col s6 m3">
+                                <a href="profile.php?id=<?php echo $user['id'] ?>"
+                                   class="btn red lighten-2 waves-effect">Discard changes
+                                    <i class="material-icons right">clear</i></a>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+            </main>
+            <?php
+        }
+    }
+
+    /**
+     *  prints form for creating a new lecture
+     */
     public static function lecture_add(){
 
         $languages = Lecture::get_languages();
 
         ?>
-        <main>
+        <main style="margin: 3em 0">
             <form id="lecture_add" method="post" enctype="multipart/form-data" action="lecture_add.php">
                 <div class="container">
 
@@ -589,7 +736,77 @@ public static function page_navbar(){
         <?php
     }
 
+    /**
+     *  prints page with admin management actions
+     */
+    public static function admin_page(){
+        ?>
 
+        <main style="margin: 3em 0">
+            <div class="container">
+                <div class="row">
+                    <div class="col s6 m3">
+                        <div class="container blue" style="width: 100%; margin: 1em 0">
+                            <a href="admin.php?mode=users" class="btn btn-large pink" style="width: 100%;">Users</a>
+                        </div>
+                    </div>
+                    <div class="col s6 m3">
+                        <div class="container blue" style="width: 100%; margin: 1em 0">
+                            <a href="#" class="btn btn-large grey" style="width: 100%;">Placeholder</a>
+                        </div>
+                    </div>
+                    <div class="col s6 m3">
+                        <div class="container blue" style="width: 100%; margin: 1em 0">
+                            <a href="#" class="btn btn-large grey" style="width: 100%;">Placeholder</a>
+                        </div>
+                    </div>
+                    <div class="col s6 m3">
+                        <div class="container blue" style="width: 100%; margin: 1em 0">
+                            <a href="#" class="btn btn-large grey" style="width: 100%;">Placeholder</a>
+                        </div>
+                    </div>
+                    <div class="col s6 m3">
+                        <div class="container blue" style="width: 100%; margin: 1em 0">
+                            <a href="#" class="btn btn-large grey" style="width: 100%;">Placeholder</a>
+                        </div>
+                    </div>
+                    <div class="col s6 m3">
+                        <div class="container blue" style="width: 100%; margin: 1em 0">
+                            <a href="#" class="btn btn-large grey" style="width: 100%;">Placeholder</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <?php
+    }
+
+
+    /**
+     *  prints list of all users for admin to manage
+     */
+    public static function admin_users(){
+        ?>
+        <main style="margin: 3em 0">
+            <div class="container">
+                <table>
+                    <thead>
+
+                    </thead>
+                    <tbody>
+                    <?php
+
+                    ?>
+
+                    <?php
+                    ?>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+        <?php
+    }
 
 }
 

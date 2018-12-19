@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="user-scalable=no">
+  <title>Howler.js Audio Player</title>
+
+  <script src="js/jquery-3.3.1.js"></script>
+
+</head>
+<body>
+
+<h1> get-avail-langs </h1>
+<pre id="api1">
+
+</pre>
+
+<br>
+
+<h1> get-lectures-in-lang </h1>
+<pre id="api2">
+
+</pre>
+
+</body>
+
+<script>
+
+    $(document).ready(function (){
+        $.ajax({
+            type: 'POST',
+            url: "./api.php",
+            data:{
+                action: "get-avail-lang"
+            },
+            dataType: 'json',
+            success:function(data){
+                console.log(data);
+                $('#api1').text(JSON.stringify(data));
+            },
+            error:function (XMLHttpRequest, textStatus, errorThrown) {
+                //alert("Status: " + textStatus); alert("Error: " + errorThrown);
+                console.log("FAIL");
+            }
+        });
+
+        let mbpPrimaryLang = 'ru';
+        $.ajax({
+            type: 'POST',
+            url: "./api.php",
+            data:{
+                action: "get-lectures-in-lang",
+                primaryLang: mbpPrimaryLang,
+            },
+            dataType: 'json',
+            success:function(data){
+                console.log(data);
+                $('#api2').text(JSON.stringify(data));
+            },
+            error:function (XMLHttpRequest, textStatus, errorThrown) {
+                //alert("Status: " + textStatus); alert("Error: " + errorThrown);
+                console.log("FAIL");
+            }
+        });
+
+    });
+
+</script>
+
+</html>

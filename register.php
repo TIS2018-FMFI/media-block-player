@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @author Martin Hrebeňár
+ */
+
 session_start();
 
 include_once ('user.php');
@@ -8,7 +12,7 @@ include_once ('page.php');
 Page::page_header('Register');
 Page::page_navbar();
 
-print_r($_POST);
+//print_r($_POST);
 
 if (isset($_POST['username']) &&
     isset($_POST['g-recaptcha-response']) && strlen($_POST['g-recaptcha-response']) > 0 &&
@@ -17,16 +21,15 @@ if (isset($_POST['username']) &&
     isset($_POST['email']) &&
     strcmp($_POST['password'], $_POST['password2']) == 0) {
     User::add_user($_POST['username'], $_POST['password'], $_POST['email']);
+    $_SESSION['msg'] = "Registration successful. You can now log in.";
+    $_SESSION['msg_status'] = "OK";
     header("location: login.php?reg=ok");
-}else {
-    echo "NotOK";
 }
-
 
 ?>
 
-    <main>
-        <div class="container" style="margin-top: 5em; margin-bottom: 5em;">
+    <main style="margin: 3em 0">
+        <div class="container"">
             <div class="row">
                 <form id="register" class="col s6 offset-s4" method="post">
                     <div class="row">
@@ -110,8 +113,8 @@ Page::page_footer();
                         minlength: 3,
                     },
                     email:{
-                      required: true,
-                      email: true,
+                        required: true,
+                        email: true,
                     },
                     password: {
                         required: true,
