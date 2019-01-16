@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="user-scalable=no">
+    <title>Howler.js Audio Player</title>
+
+    <link rel="stylesheet" href="css/materialize.css">
+
+    <script src="js/jquery-3.3.1.js"></script>
+
+</head>
+<body>
+
+<h1> get-avail-langs </h1>
+<pre id="api1">
+
+</pre>
+
+<br>
+
+<h1> get-lectures-in-lang </h1>
+<pre id="api2">
+
+</pre>
+
+</body>
+
+<script>
+
+    var resp;
+    function callback(response){
+        resp = response;
+        console.log(resp);
+        console.log("Test1 Done");
+        $('#api1').text(JSON.stringify(resp));
+    };
+
+    function callback2(response){
+        resp = response;
+        console.log(resp);
+        console.log("Test2 Done");
+        $('#api2').text(JSON.stringify(resp));
+    };
+
+    $(document).ready(function (){
+        $.ajax({
+            type: 'POST',
+            url: "http://www.st.fmph.uniba.sk/~hrebenar3/Projects/MBP/api.php",
+            data:{
+                action: "get-avail-lang"
+            },
+            dataType: 'json',
+            success:function(data){
+              callback(data);
+            },
+            error:function (XMLHttpRequest, textStatus, errorThrown) {
+                //alert("Status: " + textStatus); alert("Error: " + errorThrown);
+                console.log("FAIL");
+            }
+        });
+
+        let mbpPrimaryLang = 'ru';
+        $.ajax({
+            type: 'POST',
+            url: "http://www.st.fmph.uniba.sk/~hrebenar3/Projects/MBP/api.php",
+            data:{
+                action: "get-lectures-in-lang",
+                primaryLang: mbpPrimaryLang,
+            },
+            dataType: 'json',
+            success:function(data){
+                callback2(data);
+            },
+            error:function (XMLHttpRequest, textStatus, errorThrown) {
+                //alert("Status: " + textStatus); alert("Error: " + errorThrown);
+                console.log("FAIL");
+            }
+        });
+
+    });
+
+</script>
+
+</html>
