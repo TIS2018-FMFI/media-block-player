@@ -6,6 +6,11 @@
 
  /* CUSTOM */
 
+ #error_alert, #notSelected{
+   color: blue;
+   font-weight: bold;
+ }
+
  .m-lr-10 {
    margin: 0 10px;
  }
