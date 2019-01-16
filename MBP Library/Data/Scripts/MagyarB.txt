@@ -1,7 +1,0 @@
-﻿Információ.|
-Tessék mondani,| melyik pályaudvarra | érkezik a vonat Vársóból? |
-A Keleti pályaudvarra. |
-Hányadik vágányra érkezik? |
-Az ötödikre.|
-Melyik vágányról | indul a vonat Szegedre? |
-A második vágányról.
