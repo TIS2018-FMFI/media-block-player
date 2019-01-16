@@ -117,14 +117,6 @@ class SelectFilesPickerViewController extends ViewController {
 
     /// After selecting the options for lecture this method shows the next page.
     presentNextController() {
-        //const settingsViewController = new SettingsViewController();
-        //settingsViewController.scriptFileName = this.scriptFileName;
-        //settingsViewController.scriptBlocks = this.scriptBlocks;
-        //settingsViewController.paralelBlocks = this.paralelBlocks;
-        //settingsViewController.sound = this.sound;
-        //settingsViewController.syncFile = this.syncFile;
-        //settingsViewController.paralelFileName = this.paralelFileName;
-        //this.navigationController.present(settingsViewController);
         var audio = new Howl({
             src: this.sound,
             sprite: this.getSpritesFromJSON(this.syncFile)
