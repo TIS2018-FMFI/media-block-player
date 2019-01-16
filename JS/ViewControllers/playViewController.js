@@ -23,14 +23,14 @@ class PlayViewController extends ViewController {
           <div class="row row-100">
             <div class="col m12 center">
               <div id="original-text">
-                  POSTUPNY TEXT PO BLOKOCH
+                  
               </div>
             </div>
           </div>
           <div class="row row-50">
             <div class="col m12 center">
               <div id="paralel-text">
-                  POSTUPNY TEXT PO BLOKOCH ALE PREKLAD
+
               </div>
             </div>
           </div>

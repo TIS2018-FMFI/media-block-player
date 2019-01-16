@@ -132,6 +132,7 @@ class SelectFilesPickerViewController extends ViewController {
           translations: null
         }
         const settingsViewController = new SettingsViewController(obj, true);
+        this.navigationController.present(settingsViewController);
     }
 
     // Private Methods
