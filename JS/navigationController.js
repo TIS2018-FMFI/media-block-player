@@ -19,5 +19,15 @@ class NavigationController {
         this.actualController.navigationController = this;
         this.actualController.present();
     }
+    presentLastShownController(){
+      this.controllers.pop();
+      if (this.controllers.length == 0){
+        document.location.href=location;
+      }
+      else{
+        this.actualController = this.controllers[this.controllers.length - 1];
+        this.actualController.present();
+      }
+    }
 
 }
