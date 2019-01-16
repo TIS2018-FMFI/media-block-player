@@ -76,9 +76,7 @@ class LibrarySelectMediaLanguageViewController extends ViewController {
       }
 
       presentNextController() {
-          const settingsViewController = new SettingsViewController();
-          settingsViewController.lesson = this.lesson;
-          settingsViewController.language = this.language;
+          const settingsViewController = new SettingsViewController(this.lesson, false);
           this.navigationController.present(settingsViewController);
       }
 

@@ -117,13 +117,21 @@ class SelectFilesPickerViewController extends ViewController {
 
     /// After selecting the options for lecture this method shows the next page.
     presentNextController() {
-        const settingsViewController = new SettingsViewController();
-        settingsViewController.scriptFileName = this.scriptFileName;
-        settingsViewController.scriptBlocks = this.scriptBlocks;
-        settingsViewController.paralelBlocks = this.paralelBlocks;
-        settingsViewController.sound = this.sound;
-        settingsViewController.syncFile = this.syncFile;
-        settingsViewController.paralelFileName = this.paralelFileName;
+        var audio = new Howl({
+            src: this.sound,
+            sprite: this.getSpritesFromJSON(this.syncFile)
+        });
+
+        var obj = {
+          lecture_title: "Lecture from local disc",
+          audio: audio,
+          scriptBlocks: this.scriptBlocks,
+          paralelBlocks: this.paralelBlocks,
+          syncFile: this.syncFile,
+          sprites: this.getSpritesFromJSON(this.syncFile),
+          translations: null
+        }
+        const settingsViewController = new SettingsViewController(obj, true);
         this.navigationController.present(settingsViewController);
     }
 
@@ -234,6 +242,22 @@ class SelectFilesPickerViewController extends ViewController {
             }
         });
         return result;
+    }
+    getSpritesFromJSON(syncBlocks){
+      var sprites = {};
+
+      var currPos = 0;
+      var currIndex = 0
+      syncBlocks['blocks'].forEach((block, i) => {
+        let currTime = block * 1000;
+        if (!syncBlocks['skips'].includes(block)){
+          sprites["block_" + currIndex] = [currPos, currTime - currPos];
+          currIndex++;
+        }
+        currPos = currTime;
+      });
+
+      return sprites;
     }
 
 }
