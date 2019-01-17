@@ -180,9 +180,11 @@ class LibrarySelectMediaLanguageViewController extends ViewController {
                   if ((this.listOfLessons[line]["audio_file_link"] != "" && this.listOfLessons[line]["audio_file_link"] != undefined) &&
                       (this.listOfLessons[line]["original_text_link"] != "" && this.listOfLessons[line]["original_text_link"] != undefined) &&
                       (this.listOfLessons[line]["sync_file_link"] != "" && this.listOfLessons[line]["sync_file_link"] != undefined)){
-                        return "invalid";
+                        return this.listOfLessons[line];
                   }
-                  return this.listOfLessons[line];
+                  else{
+                    return "invalid";
+                  }
               }
           }
           return undefined;
