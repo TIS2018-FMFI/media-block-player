@@ -56,7 +56,7 @@ class SelectFilesPickerViewController extends ViewController {
                             <div class="file-field input-field">
                                 <div class="btn">
                                     <span><i class="material-icons right">description</i>Sync File</span>
-                                    <input id="sync-file-picker" type="file" accept=".mpbsf" />
+                                    <input id="sync-file-picker" type="file" accept=".mbpsf" />
                                 </div>
                                 <div class="file-path-wrapper">
                                     <input class="file-path validate" type="text">
@@ -175,9 +175,7 @@ class SelectFilesPickerViewController extends ViewController {
         }
         this.scriptFileName = audioFile.name.split('.').slice(0, -1).join('.');
         this.getBase64(audioFile).then( data => {
-            this.sound = new Howl({
-                src: data
-            });
+            this.sound = data;
         });
         this.setupSelectButton();
     }

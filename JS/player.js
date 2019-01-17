@@ -185,6 +185,9 @@ class Player {
 
     // help function the check the answer in mode Pronounciation check and Speaking check
     playSound() {
+        if (this.sound.playing())
+            return;
+            
         if (this.playMode == "5") {
             document.getElementById('original-text').innerHTML = this.orginalTextBlocks[this.blockOrder[this.actualBlock]];
         }
