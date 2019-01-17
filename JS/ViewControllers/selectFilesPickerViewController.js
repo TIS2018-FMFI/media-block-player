@@ -200,8 +200,7 @@ class SelectFilesPickerViewController extends ViewController {
         const rewrittenAudioPickerHasFile = this.rewrittenAudioFilePicker[0].files[0] !== undefined;
         const paralelRewrittenAudioPickerHasFile = this.paralelRewrittenAudioFilePicker[0].files[0] !== undefined;
         const syncPickerHasFile = this.syncFilePicker[0].files[0] !== undefined;
-        const shouldEnableSelectButton = audioPickerHasFile && rewrittenAudioPickerHasFile
-                                          && paralelRewrittenAudioPickerHasFile && syncPickerHasFile;
+        const shouldEnableSelectButton = audioPickerHasFile && rewrittenAudioPickerHasFile && syncPickerHasFile;
         if (shouldEnableSelectButton) {
             this.selectButton.removeClass("disabled");
         } else {
