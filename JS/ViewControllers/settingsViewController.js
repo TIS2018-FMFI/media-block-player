@@ -15,7 +15,10 @@ class SettingsViewController extends ViewController {
         var langOptions = "";
         if (this.lecture.translations != null) {
             var transCount = Object.keys(this.lecture.translations).length;
-            if (transCount > 1){
+            if (transCount == 0){
+              langOptions += "<input type='hidden' name='translation-lang' value="" id='translation-lang' class='hide'>";
+            }
+            else if (transCount == 1){
               langOptions += "<select name='translation-lang' id='translation-lang'>";
               langOptions += "<option value=''>Choose your option</option>";
               for (var lang in this.lecture.translations) {
@@ -34,10 +37,7 @@ class SettingsViewController extends ViewController {
             }
 
         } else {
-            langOptions += "<input type='hidden' name='translation-lang' id='translation-lang' class='hide'>";
-            //langOptions += "<select name='translation-lang' id='translation-lang' class='disabled hide' disabled>";
-            //langOptions += "<option value=''>Choose your option</option>";
-            //langOptions += "</select>";
+            langOptions += "<input type='hidden' name='translation-lang' value="" id='translation-lang' class='hide'>";
         }
 
 
@@ -177,6 +177,8 @@ class SettingsViewController extends ViewController {
         this.pause = $('#pause');
         this.repeat = $("#repeat");
         this.pauseRepeat = $("#pause_repeat");
+
+        this.checkAvailableTranslations();
     }
 
     setupEventListeners() {
@@ -313,6 +315,8 @@ class SettingsViewController extends ViewController {
             this.repeat.prop('disabled', false);
             this.pauseRepeat.prop('disabled', false);
         }
+
+        checkAvailableTranslations();
     }
 
     // This method is reading the sync file from the server, than
@@ -394,5 +398,15 @@ class SettingsViewController extends ViewController {
             }
         });
         return result;
+    }
+
+    checkAvailableTranslations(){
+        if (this.lecture.translations != null){
+          var transCount = Object.keys(this.lecture.translations).length;
+          if (transCount == 0){
+            this.paralel.prop('checked', false);
+            this.paralel.prop('disabled', true);
+          }
+        }
     }
 }

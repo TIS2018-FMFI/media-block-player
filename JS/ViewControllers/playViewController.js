@@ -107,8 +107,6 @@ class PlayViewController extends ViewController {
 
     playLecture() {
         if (this.player.paused) {
-            //this.player.actualBlock = this.player.pausedBlock;
-            //this.player.blockPlayedCount = this.player.pausedBlockRepeat;
             this.player.paused = false;
         }
         this.player.play();
