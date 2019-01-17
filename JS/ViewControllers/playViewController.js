@@ -23,7 +23,7 @@ class PlayViewController extends ViewController {
           <div class="row row-100">
             <div class="col m12 center">
               <div id="original-text">
-                  
+
               </div>
             </div>
           </div>
@@ -37,22 +37,22 @@ class PlayViewController extends ViewController {
           <div class="row row-50">
             <div class="col m12 center">
               <div id="control-btns">
-                  <button class="btn waves-effect waves-light" id="back">
+                  <button class="btn" id="back">
                     <i class="material-icons">fast_rewind</i>
                   </button>
 
-                  <button class="btn-large waves-effect waves-light" id="play">
+                  <button class="btn-large" id="play">
                     <i class="material-icons">play_arrow</i>
                   </button>
 
-                  <button class="btn-large waves-effect waves-light" id="pause">
+                  <button class="btn-large" id="pause">
                     <i class="material-icons">pause</i>
                   </button>
                   ` +
             waitBtn +
             `
 
-                  <button class="btn waves-effect waves-light" id="forward">
+                  <button class="btn" id="forward">
                     <i class="material-icons">fast_forward</i>
                   </button>
               </div>
@@ -107,8 +107,8 @@ class PlayViewController extends ViewController {
 
     playLecture() {
         if (this.player.paused) {
-            this.player.actualBlock = this.player.pausedBlock;
-            this.player.blockPlayedCount = this.player.pausedBlockRepeat;
+            //this.player.actualBlock = this.player.pausedBlock;
+            //this.player.blockPlayedCount = this.player.pausedBlockRepeat;
             this.player.paused = false;
         }
         this.player.play();

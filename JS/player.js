@@ -59,7 +59,7 @@ class Player {
 
     // This method starts playing the lecture.
     play() {
-        if (this.paused || this.sound.playing()) {
+        if (this.sound.playing()) {
             return;
         }
         // play
@@ -82,7 +82,7 @@ class Player {
             var playDelay = this.playMode == "4" ? 500 : 0;
 
             setTimeout(function() {
-                if (!tmpPlayer.waitForBtn)
+                if (!tmpPlayer.waitForBtn && !this.paused)
                     tmpPlayer.sound.play('block_' + tmpPlayer.blockOrder[tmpPlayer.actualBlock]);
 
                 var timeOutTime = 500;
@@ -161,6 +161,7 @@ class Player {
             this.actualBlock++;
             this.blockPlayedCount = 0;
             this.play();
+
         } else {
             this.actualBlock = 0;
             this.blockPlayedCount = 0;
@@ -187,7 +188,7 @@ class Player {
     playSound() {
         if (this.sound.playing())
             return;
-            
+
         if (this.playMode == "5") {
             document.getElementById('original-text').innerHTML = this.orginalTextBlocks[this.blockOrder[this.actualBlock]];
         }
