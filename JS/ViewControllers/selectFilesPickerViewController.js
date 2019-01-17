@@ -175,9 +175,7 @@ class SelectFilesPickerViewController extends ViewController {
         }
         this.scriptFileName = audioFile.name.split('.').slice(0, -1).join('.');
         this.getBase64(audioFile).then( data => {
-            this.sound = new Howl({
-                src: data
-            });
+            this.sound = data;
         });
         this.setupSelectButton();
     }

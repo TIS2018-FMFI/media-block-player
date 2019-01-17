@@ -240,13 +240,6 @@ class SettingsViewController extends ViewController {
             this.pause.next("label").addClass('active');
             this.repeat.next("label").addClass('active');
             this.pauseRepeat.next("label").addClass('active');
-
-            this.script.prop('disabled', true);
-            this.paralel.prop('disabled', true);
-            this.direction.prop('disabled', true);
-            this.pause.prop('disabled', true);
-            this.repeat.prop('disabled', true);
-            this.pauseRepeat.prop('disabled', true);
         } else if (val == "2") {
             this.script.prop('checked', true);
             this.paralel.prop('checked', true);
@@ -258,13 +251,6 @@ class SettingsViewController extends ViewController {
             this.pause.next("label").addClass('active');
             this.repeat.next("label").addClass('active');
             this.pauseRepeat.next("label").addClass('active');
-
-            this.script.prop('disabled', true);
-            this.paralel.prop('disabled', true);
-            this.direction.prop('disabled', true);
-            this.pause.prop('disabled', true);
-            this.repeat.prop('disabled', true);
-            this.pauseRepeat.prop('disabled', true);
         } else if (val == "3") {
             this.script.prop('checked', true);
             this.paralel.prop('checked', true);
@@ -276,13 +262,6 @@ class SettingsViewController extends ViewController {
             this.pause.next("label").addClass('active');
             this.repeat.next("label").addClass('active');
             this.pauseRepeat.next("label").addClass('active');
-
-            this.script.prop('disabled', true);
-            this.paralel.prop('disabled', true);
-            this.direction.prop('disabled', false);
-            this.pause.prop('disabled', true);
-            this.repeat.prop('disabled', true);
-            this.pauseRepeat.prop('disabled', true);
         } else if (val == "4") {
             this.script.prop('checked', true);
             this.paralel.prop('checked', true);
@@ -294,13 +273,6 @@ class SettingsViewController extends ViewController {
             this.pause.next("label").addClass('active');
             this.repeat.next("label").addClass('active');
             this.pauseRepeat.next("label").addClass('active');
-
-            this.script.prop('disabled', true);
-            this.paralel.prop('disabled', true);
-            this.direction.prop('disabled', true);
-            this.pause.prop('disabled', true);
-            this.repeat.prop('disabled', true);
-            this.pauseRepeat.prop('disabled', true);
         } else if (val == "5") {
             this.script.prop('checked', true);
             this.paralel.prop('checked', true);
@@ -312,13 +284,6 @@ class SettingsViewController extends ViewController {
             this.pause.next("label").addClass('active');
             this.repeat.next("label").addClass('active');
             this.pauseRepeat.next("label").addClass('active');
-
-            this.script.prop('disabled', true);
-            this.paralel.prop('disabled', true);
-            this.direction.prop('disabled', false);
-            this.pause.prop('disabled', true);
-            this.repeat.prop('disabled', true);
-            this.pauseRepeat.prop('disabled', true);
         } else {
             this.pause.val("");
             this.repeat.val("");
