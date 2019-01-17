@@ -14,16 +14,30 @@ class SettingsViewController extends ViewController {
     renderHtml(html) {
         var langOptions = "";
         if (this.lecture.translations != null) {
-            langOptions += "<select name='translation-lang' id='translation-lang'>";
-            langOptions += "<option value=''>Choose your option</option>";
-            for (var lang in this.lecture.translations) {
-                langOptions += "<option value='" + this.lecture.translations[lang] + "'>" + lang + "</option>";
+            var transCount = Object.keys(this.lecture.translations).length;
+            if (transCount == 0){
+              langOptions += "<input type='hidden' name='translation-lang' value="" id='translation-lang' class='hide'>";
             }
-            langOptions += "</select>";
+            else if (transCount == 1){
+              langOptions += "<select name='translation-lang' id='translation-lang'>";
+              langOptions += "<option value=''>Choose your option</option>";
+              for (var lang in this.lecture.translations) {
+                  langOptions += "<option value='" + this.lecture.translations[lang] + "'>" + lang + "</option>";
+              }
+              langOptions += "</select>";
+              langOptions += "<label>Paralel text</label>";
+            }
+            else{
+              langOptions += "<select name='translation-lang' id='translation-lang' class='disabled' disabled>";
+              for (var lang in this.lecture.translations) {
+                  langOptions += "<option value='" + this.lecture.translations[lang] + "' selected>" + lang + "</option>";
+              }
+              langOptions += "</select>";
+              langOptions += "<label>Paralel text</label>";
+            }
+
         } else {
-            langOptions += "<select name='translation-lang' id='translation-lang' class='disabled' disabled>";
-            langOptions += "<option value=''>Choose your option</option>";
-            langOptions += "</select>";
+            langOptions += "<input type='hidden' name='translation-lang' value="" id='translation-lang' class='hide'>";
         }
 
 
@@ -65,15 +79,15 @@ class SettingsViewController extends ViewController {
                   <div class="col s10 offset-s1">
                     <div class="input-field col s12">
                       <input id="pause" type="number" min="0" max="20" name="pause" class="validate">
-                      <label for="pause">Pause (sec)</label>
+                      <label for="pause">Pause between blocks (sec)</label>
                     </div>
                     <div class="input-field col s12">
                       <input id="repeat" type="number" min="0" max="20" name="repeat" class="validate">
-                      <label for="repeat">Repeat</label>
+                      <label for="repeat">Block repeats</label>
                     </div>
                     <div class="input-field col s12">
                       <input id="pause_repeat" type="number" min="0" max="20" name="pause_repeat" class="validate">
-                      <label for="pause_repeat">Pause repeat (sec)</label>
+                      <label for="pause_repeat">Pause between repeating blocks (sec)</label>
                     </div>
                   </div>
                 </div>
@@ -138,7 +152,6 @@ class SettingsViewController extends ViewController {
               <div class="col s12 offset-l3 l6">
                 <div class="input-field col s12">
                 ` + langOptions + `
-                  <label>Paralel text</label>
                 </div>
               </div>
               <div class="col s12 center-align">
@@ -164,6 +177,8 @@ class SettingsViewController extends ViewController {
         this.pause = $('#pause');
         this.repeat = $("#repeat");
         this.pauseRepeat = $("#pause_repeat");
+
+        this.checkAvailableTranslations();
     }
 
     setupEventListeners() {
@@ -300,6 +315,8 @@ class SettingsViewController extends ViewController {
             this.repeat.prop('disabled', false);
             this.pauseRepeat.prop('disabled', false);
         }
+
+        checkAvailableTranslations();
     }
 
     // This method is reading the sync file from the server, than
@@ -381,5 +398,15 @@ class SettingsViewController extends ViewController {
             }
         });
         return result;
+    }
+
+    checkAvailableTranslations(){
+        if (this.lecture.translations != null){
+          var transCount = Object.keys(this.lecture.translations).length;
+          if (transCount == 0){
+            this.paralel.prop('checked', false);
+            this.paralel.prop('disabled', true);
+          }
+        }
     }
 }
