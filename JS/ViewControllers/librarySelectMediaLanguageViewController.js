@@ -86,6 +86,9 @@ class LibrarySelectMediaLanguageViewController extends ViewController {
               $("#error_alert").text("");
               this.presentNextController();
           }
+          else if (this.lesson == "invalid"){
+            $("#error_alert").text("You choose invalid lecture!");
+          }
           else{
               $("#error_alert").text("You haven't choosen any lecture!");
           }
@@ -174,6 +177,11 @@ class LibrarySelectMediaLanguageViewController extends ViewController {
       getSelectedLesson(){
           for (var line in this.listOfLessons){
               if (document.getElementById(this.listOfLessons[line]["id"]).checked == true){
+                  if ((this.listOfLessons[line]["audio_file_link"] != "" && this.listOfLessons[line]["audio_file_link"] != undefined) &&
+                      (this.listOfLessons[line]["original_text_link"] != "" && this.listOfLessons[line]["original_text_link"] != undefined) &&
+                      (this.listOfLessons[line]["sync_file_link"] != "" && this.listOfLessons[line]["sync_file_link"] != undefined)){
+                        return "invalid";
+                  }
                   return this.listOfLessons[line];
               }
           }
