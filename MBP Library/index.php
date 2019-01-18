@@ -52,7 +52,6 @@ Page::page_footer();
 
 
     $("[data-lecture]").click(function () {
-        console.log(this.getAttribute('data-lecture'));
         $data = this.getAttribute('data-lecture');
         $lec_id = this.getAttribute('data-lecture-id');
         $form_id = "#download_" + $data;
@@ -107,7 +106,6 @@ Page::page_footer();
 
             })
                 .then(function callback(blob) {
-                    console.log("here we go");
                     plus_download_count($lec_id);
                     saveAs(blob, lec_name + ".zip");
                     $("#progress_bar_" + $data).hide();

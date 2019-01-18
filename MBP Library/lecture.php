@@ -180,9 +180,19 @@ class Lecture{
             $fileType = strtolower(pathinfo($files['lecture_media']['name'],PATHINFO_EXTENSION));
             $media_f = 'Data/Media/'.$lecture_name.'.'.$fileType;
             self::update_lecture_media_file($media_f, $lec_id);
+        }
+        else{
+          $_SESION['msg'] = "Error while uploading files";
+          $_SESION['msg_type'] = "ERR";
         };
-        self::save_one_file($files['lecture_script'], "Scripts", $lecture_name);
-        self::save_one_file($files['lecture_sync'], "Syncs", $lecture_name);
+        if(!self::save_one_file($files['lecture_script'], "Scripts", $lecture_name)){
+          $_SESION['msg'] = "Error while uploading files";
+          $_SESION['msg_type'] = "ERR";
+        };
+        if(!self::save_one_file($files['lecture_sync'], "Syncs", $lecture_name)){
+          $_SESION['msg'] = "Error while uploading files";
+          $_SESION['msg_type'] = "ERR";
+        };
 
         return true;
     }
@@ -303,7 +313,6 @@ class Lecture{
             if ($result = $mysqli->query($sql)){
                 while($row = $result->fetch_assoc()){
                     array_push($res, array('data'=>$row, 'trans'=> self::get_lecture_translations($row['id'])));
-                    //array_push($res, $row);
                 }
                 return $res;
             }
@@ -314,13 +323,36 @@ class Lecture{
     public static function delete_lecture($lecture_id){
         global $mysqli;
 
-        $sql = "UPDATE mbp_lectures SET active = 0 WHERE id = '$lecture_id'";
+        /*$sql = "UPDATE mbp_lectures SET active = 0 WHERE id = '$lecture_id'";
         if (!$mysqli->connect_errno) {
-            if ($result = $mysqli->query($sql)){
-                return true;
+            $mysqli->query($sql);
+        }*/
+
+        $sql_1 = "SELECT * FROM mbp_lectures WHERE id = $lecture_id";
+        if (!$mysqli->connect_errno) {
+            if ($result = $mysqli->query($sql_1)){
+                while($row = $result->fetch_assoc()){
+                    if(file_exists($row['audio_link'])) unlink($row['audio_link']);
+                    if(file_exists($row['text_link']))unlink($row['text_link']);
+                    if(file_exists($row['sync_file_link']))unlink($row['sync_file_link']);
+                    $sql_1_1 = "DELETE FROM mbp_lectures WHERE id = $lecture_id";
+                    $mysqli->query($sql_1_1);
+                }
+            }
+        };
+
+        $sql_2 = "SELECT * FROM mbp_translations WHERE lecture_id = $lecture_id";
+        if (!$mysqli->connect_errno) {
+            if ($result = $mysqli->query($sql_2)){
+                while($row = $result->fetch_assoc()){
+                    if(file_exists($row['trans_link']))unlink($row['trans_link']);
+                    $sql_2_1 = "DELETE FROM mbp_translations WHERE id = ".$row['id'];
+                    $mysqli->query($sql_2_1);
+                }
             }
         }
-        return NULL;
+
+        return true;
     }
 
 }

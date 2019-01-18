@@ -14,16 +14,12 @@ Page::page_header('New lecture');
 Page::page_navbar();
 
 if(isset($_POST['save_lecture'])){
-    //echo "<pre>";
-    //var_dump($_POST);
-    //var_dump($_FILES);
-    //echo "</pre>";
 
-    //var_dump(check_files($_FILES, $_POST['trans_count']));
-
-    if(!check_files($_FILES, $_POST['trans_count'])) echo "ERROR FILES";
+    if(!check_files($_FILES, $_POST['trans_count'])){
+        $_SESSION['msg'] = "Files cannot be uploaded.\nMax file size is 30 Mb.";
+        $_SESSION['msg_status'] = "ERR";
+    }
     else{
-
         $lec_id = Lecture::save_lecture($_POST, $_SESSION['id']);
         Lecture::save_lecture_files($_FILES, $_POST['lecture_title'], $lec_id);
         Lecture::save_lecture_translations($_FILES, $_POST,$lec_id);
@@ -37,6 +33,11 @@ if(isset($_POST['save_lecture'])){
 if(!isset($_SESSION['id'])){
     Page::error_card("You must be logged in to be able to add new lecture.");
 }else {
+  if (isset($_SESSION['msg'])) {
+      Page::page_message($_SESSION['msg_status'], $_SESSION['msg']);
+      unset($_SESSION['msg']);
+      unset($_SESSION['msg_status']);
+  }
     Page::lecture_add();
 }
 
@@ -47,6 +48,23 @@ Page::page_footer();
 <script>
     $(document).ready(function(){
         var $trans_index = 1;
+
+        $('#lecture_add').validate({
+            rules: {
+                lecture_media: {
+                    required: true,
+                    extension: "wav,mp3",
+                },
+                lecture_script: {
+                    required: true,
+                    extension: "txt",
+                },
+                lecture_sync: {
+                    required: true,
+                    extension: "mbpsf",
+                }
+            }
+        });
 
         $("#add_translation").click(function () {
             //console.log("klik ", $trans_index);
