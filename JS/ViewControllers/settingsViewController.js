@@ -16,28 +16,28 @@ class SettingsViewController extends ViewController {
         if (this.lecture.translations != null) {
             var transCount = Object.keys(this.lecture.translations).length;
             if (transCount == 0){
-              langOptions += "<input type='hidden' name='translation-lang' value="" id='translation-lang' class='hide'>";
+              langOptions += "<input type='hidden' name='translation-lang' value='' id='translation-lang' class='hide'>";
             }
             else if (transCount == 1){
-              langOptions += "<select name='translation-lang' id='translation-lang'>";
-              langOptions += "<option value=''>Choose your option</option>";
-              for (var lang in this.lecture.translations) {
-                  langOptions += "<option value='" + this.lecture.translations[lang] + "'>" + lang + "</option>";
-              }
-              langOptions += "</select>";
-              langOptions += "<label>Paralel text</label>";
-            }
-            else{
               langOptions += "<select name='translation-lang' id='translation-lang' class='disabled' disabled>";
+              langOptions += "<option value=''>Choose your option</option>";
               for (var lang in this.lecture.translations) {
                   langOptions += "<option value='" + this.lecture.translations[lang] + "' selected>" + lang + "</option>";
               }
               langOptions += "</select>";
               langOptions += "<label>Paralel text</label>";
             }
+            else{
+              langOptions += "<select name='translation-lang' id='translation-lang'>";
+              for (var lang in this.lecture.translations) {
+                  langOptions += "<option value='" + this.lecture.translations[lang] + "'>" + lang + "</option>";
+              }
+              langOptions += "</select>";
+              langOptions += "<label>Paralel text</label>";
+            }
 
         } else {
-            langOptions += "<input type='hidden' name='translation-lang' value="" id='translation-lang' class='hide'>";
+            langOptions += "<input type='hidden' name='translation-lang' value='' id='translation-lang' class='hide'>";
         }
 
 
@@ -316,7 +316,7 @@ class SettingsViewController extends ViewController {
             this.pauseRepeat.prop('disabled', false);
         }
 
-        checkAvailableTranslations();
+        this.checkAvailableTranslations();
     }
 
     // This method is reading the sync file from the server, than
