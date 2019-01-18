@@ -51,7 +51,7 @@ function resize_image($file, $w, $h, $crop=FALSE) {
  */
 function check_files($files, $trans_count){
 
-    if($files['lecture_media']['size'] == 0) return false;
+    if($files['lecture_media']['size'] == 0 || $files['lecture_media']['size'] >= 36700160) return false;
 
     if($files['lecture_script']['size'] == 0) return false;
 

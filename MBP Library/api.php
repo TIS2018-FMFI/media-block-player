@@ -39,7 +39,7 @@ if(isset($_POST['action']) && !empty($_POST['action'])){
      */
     if(strcmp($_POST['action'], "get-avail-lang") === 0){
 
-        $sql = "SELECT DISTINCT lang.id, lang.abbr, lang.name FROM mbp_lectures as l join mbp_languages as lang on lang.id = l.language_id";
+        $sql = "SELECT DISTINCT lang.id, lang.abbr, lang.name FROM mbp_lectures as l join mbp_languages as lang on lang.id = l.language_id WHERE l.active = 1";
         $res = array();
         if (!$mysqli->connect_errno) {
             if ($result = $mysqli->query($sql)){
@@ -58,7 +58,7 @@ if(isset($_POST['action']) && !empty($_POST['action'])){
      */
     if(strcmp($_POST['action'], "get-lectures-in-lang") === 0){
         $lang = $_POST['primaryLang'];
-        $sql = "SELECT lec.*, lang.abbr FROM mbp_lectures as lec JOIN mbp_languages as lang ON lec.language_id = lang.id WHERE abbr = '$lang'";
+        $sql = "SELECT lec.*, lang.abbr FROM mbp_lectures as lec JOIN mbp_languages as lang ON lec.language_id = lang.id WHERE abbr = '$lang' AND lec.active = 1";
         $res = array();
         if (!$mysqli->connect_errno) {
             if ($result = $mysqli->query($sql)){
@@ -71,15 +71,19 @@ if(isset($_POST['action']) && !empty($_POST['action'])){
                     $lec->lecture_title = $row['name'];
                     $lec->description = $row['description'];
                     $lec->level = $row['difficulty'];
-                    $lec->audio_file_link = $p.$row['audio_link'];
-                    $lec->original_text_link = $p.$row['text_link'];
-                    $lec->sync_file_link = $p.$row['sync_file_link'];
+                    if(file_exists($row['audio_link'])) $lec->audio_file_link = $p.$row['audio_link'];
+                    else $lec->audio_file_link = "";
+                    if(file_exists($row['text_link'])) $lec->original_text_link = $p.$row['text_link'];
+                    else $lec->original_text_link = "";
+                    if(file_exists($row['sync_file_link'])) $lec->sync_file_link = $p.$row['sync_file_link'];
+                    else $lec->sync_file_link = "";
 
                     $tmp = Lecture::get_lecture_translations($row['id']);
 
                     $trans = new \stdClass();
                     foreach ($tmp as $item){
-                        $path = $p.$item['trans_link'];
+                        if(file_exists($item['trans_link'])) $path = $p.$item['trans_link'];
+                        else $path = "";
                         $lg = $item['abbr'];
                         $trans->$lg = $path;
                     }

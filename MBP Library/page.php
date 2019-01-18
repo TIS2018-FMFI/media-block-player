@@ -65,7 +65,7 @@ public static function page_navbar(){
             <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
             <ul class="right hide-on-med-and-down">
                 <li>
-                    <a class="waves-effect btn grey lighten-2 black-text" href="#">Application</a>
+                    <a class="waves-effect btn grey lighten-2 black-text" href="../MBPApp/index.html">Application</a>
                 </li>
                 <?php if (isset($_SESSION['id'])) { ?>
                     <li>
@@ -134,7 +134,7 @@ public static function page_footer()
         </div>
         <div class="footer-copyright">
             <div class="container">
-                &copy; Created by 'Prvá skupina v zozname' as a school project, 2018
+                &copy; Created by 'Prvá skupina v zozname' as a school project, 2019
             </div>
         </div>
     </footer>
@@ -283,7 +283,6 @@ if ($lectures == null) {
             $lecture_diff = $lecture['data']['difficulty'];
             $lecture_down_count = $lecture['data']['download_count'];
 
-
             echo "<tr>";
             echo "<td>$lecture_id</td>";
             echo "<td>$lecture_name</td>";
@@ -298,12 +297,14 @@ if ($lectures == null) {
 
 
         echo "</tbody></table><ul class='pagination'>";
-        echo "<li class='waves-effect'><a href='#!'><i class='material-icons'>chevron_left</i></a></li>";
-        for ($i = 1; $i <= ($lectures_count / $page_entries) + 1; $i++) {
+        if ( !isset($_GET['page']) || $_GET['page'] <= 1 ) echo "<li class='waves-effect'><a href='#!'><i class='material-icons'>chevron_left</i></a></li>";
+        else echo "<li class='waves-effect'><a href='?page=".($_GET['page']-1)."'><i class='material-icons'>chevron_left</i></a></li>";
+        for ($i = 1; $i < ($lectures_count / $page_entries) + 1; $i++) {
             if ((isset($_GET['page']) && $i == $_GET['page']) || (!isset($_GET['page']) && $i == 1)) echo "<li class='active blue'><a href='?page=$i'>$i</a></li>";
             else echo "<li class='waves-effect'><a href='?page=$i'>$i</a></li>";
         }
-        echo "<li class='waves-effect'><a href='#!'><i class='material-icons'>chevron_right</i></a></li>";
+        if (isset($_GET['page']) && $_GET['page'] >= ($lectures_count / $page_entries) ) echo "<li class='waves-effect'><a href='#!'><i class='material-icons'>chevron_right</i></a></li>";
+        else echo "<li class='waves-effect'><a href='?page=".($_GET['page']+1)."'><i class='material-icons'>chevron_right</i></a></li>";
         echo "</ul>";
         echo "</div>";
 
@@ -599,7 +600,7 @@ if ($lectures == null) {
             $lectures = Lecture::get_user_lectures($user_id);
 
             if ($lectures == Null) {
-                echo "Not found";
+                self::warning_card("No lectures found");
                 return;
             }
 
@@ -879,7 +880,6 @@ if ($lectures == null) {
         {
 
             $languages = Lecture::get_languages();
-
             ?>
             <main style="margin: 3em 0">
                 <form id="lecture_add" method="post" enctype="multipart/form-data" action="lecture_add.php">

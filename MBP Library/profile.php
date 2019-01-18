@@ -41,7 +41,7 @@ if (isset($_GET['id'])){
             if ($uploadOk == 0) {
                 if(!isset($_SESSION['msg'])){
                     $_SESSION['msg'] = "Sorry, your file was not uploaded.";
-                    $_SESSION['msg_staus'] = 'ERR';
+                    $_SESSION['msg_status'] = 'ERR';
                 }
             } else {
                 if (move_uploaded_file($_FILES["picture"]["tmp_name"], $new_file)) {
@@ -52,7 +52,7 @@ if (isset($_GET['id'])){
                 } else {
                     if(!isset($_SESSION['msg'])){
                         $_SESSION['msg'] = "Sorry, there was an error uploading your file.";
-                        $_SESSION['msg_staus'] = 'ERR';
+                        $_SESSION['msg_status'] = 'ERR';
                     }
                 }
             }
@@ -115,7 +115,6 @@ Page::page_footer();
         });
 
         $("[data-lecture]").click(function () {
-            console.log(this.getAttribute('data-lecture'));
             $data = this.getAttribute('data-lecture');
             $lec_id = this.getAttribute('data-lecture-id');
             $form_id = "#download_" + $data;
@@ -170,7 +169,6 @@ Page::page_footer();
 
                 })
                     .then(function callback(blob) {
-                        console.log("here we go");
                         saveAs(blob, lec_name + ".zip");
                         $("#progress_bar_" + $data).hide();
                         showMessage("done !");
@@ -196,8 +194,6 @@ Page::page_footer();
                 .then((willDelete) => {
                     if (willDelete) {
                         delete_lecture(lid);
-                    } else {
-                        //swal("Your Lecture is safe!");
                     }
                 });
         });
@@ -215,7 +211,7 @@ Page::page_footer();
                     swal("Poof! Your lecture has been deleted!", {
                         icon: "success",
                     });
-                    console.log(data);
+                    location.reload();
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     swal("Error:"+textStatus+'\n'+errorThrown, {
