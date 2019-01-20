@@ -65,7 +65,7 @@ public static function page_navbar(){
             <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
             <ul class="right hide-on-med-and-down">
                 <li>
-                    <a class="waves-effect btn grey lighten-2 black-text" href="../MBPApp/index.html">Application</a>
+                    <a class="waves-effect btn grey lighten-2 black-text" href="../index.html">Application</a>
                 </li>
                 <?php if (isset($_SESSION['id'])) { ?>
                     <li>
@@ -96,7 +96,7 @@ public static function page_navbar(){
 
     <ul class="sidenav" id="mobile-demo">
         <li class="nav-item">
-            <a class="nav-link" href="#">Application</a>
+            <a class="nav-link" href="../index.html">Application</a>
         </li>
         <?php if (isset($_SESSION['id'])) { ?>
             <li class="nav-item">
@@ -178,6 +178,19 @@ if (isset($_GET['page'])) $start_from = ($_GET['page'] - 1) * $page_entries;
 
 $avail_langs = Lecture::get_avail_langs();
 
+if(isset($_POST['filter_sent'])){
+    $_SESSION['is_filtered'] = true;
+    $_SESSION['filter_language'] = $_POST['filter_language'];
+    $_SESSION['filter_diff'] = $_POST['filter_diff'];
+    $_SESSION['filter_order'] = $_POST['filter_order'];
+}
+elseif(isset($_POST['filter_reset']) || !isset($_GET['page'])){
+    unset($_SESSION['is_filtered']);
+    unset($_SESSION['filter_language']);
+    unset($_SESSION['filter_diff']);
+    unset($_SESSION['filter_order']);
+}
+
 ?>
 <div class='container'>
 
@@ -188,7 +201,7 @@ $avail_langs = Lecture::get_avail_langs();
                     <option selected value="Def">All</option>
                     <?php
                     foreach ($avail_langs as $alang) {
-                        if (isset($_POST['filter_language']) && $_POST['filter_language'] == $alang['id']) echo "<option value='" . $alang['id'] . "' selected>" . $alang['name'] . "</option>";
+                        if (isset($_SESSION['filter_language']) && $_SESSION['filter_language'] == $alang['id']) echo "<option value='" . $alang['id'] . "' selected>" . $alang['name'] . "</option>";
                         else echo "<option value='" . $alang['id'] . "'>" . $alang['name'] . "</option>";
                     }
                     ?>
@@ -198,13 +211,13 @@ $avail_langs = Lecture::get_avail_langs();
             <div class="input-field col s6 m3">
                 <select id="filter_diff" name="filter_diff" required>
                     <option selected value="Def">All</option>
-                    <option value="1" <?php if (isset($_POST['filter_diff']) && $_POST['filter_diff'] == 1) echo "selected" ?>>
+                    <option value="1" <?php if (isset($_SESSION['filter_diff']) && $_SESSION['filter_diff'] == 1) echo "selected" ?>>
                         1
                     </option>
-                    <option value="2" <?php if (isset($_POST['filter_diff']) && $_POST['filter_diff'] == 2) echo "selected" ?>>
+                    <option value="2" <?php if (isset($_SESSION['filter_diff']) && $_SESSION['filter_diff'] == 2) echo "selected" ?>>
                         2
                     </option>
-                    <option value="3" <?php if (isset($_POST['filter_diff']) && $_POST['filter_diff'] == 3) echo "selected" ?>>
+                    <option value="3" <?php if (isset($_SESSION['filter_diff']) && $_SESSION['filter_diff'] == 3) echo "selected" ?>>
                         3
                     </option>
                 </select>
@@ -213,29 +226,33 @@ $avail_langs = Lecture::get_avail_langs();
             <div class="input-field col s6 m3">
                 <select id="filter_order" name="filter_order" required>
                     <option selected value="Def">Default</option>
-                    <option value="1" <?php if (isset($_POST['filter_order']) && $_POST['filter_order'] == 1) echo "selected" ?>>
+                    <option value="1" <?php if (isset($_SESSION['filter_order']) && $_SESSION['filter_order'] == 1) echo "selected" ?>>
                         (A-Z)
                     </option>
-                    <option value="2" <?php if (isset($_POST['filter_order']) && $_POST['filter_order'] == 2) echo "selected" ?>>
+                    <option value="2" <?php if (isset($_SESSION['filter_order']) && $_SESSION['filter_order'] == 2) echo "selected" ?>>
                         (Z-A)
                     </option>
-                    <option value="3" <?php if (isset($_POST['filter_order']) && $_POST['filter_order'] == 3) echo "selected" ?>>
+                    <option value="3" <?php if (isset($_SESSION['filter_order']) && $_SESSION['filter_order'] == 3) echo "selected" ?>>
                         Downloads(Asc)
                     </option>
-                    <option value="4" <?php if (isset($_POST['filter_order']) && $_POST['filter_order'] == 4) echo "selected" ?>>
+                    <option value="4" <?php if (isset($_SESSION['filter_order']) && $_SESSION['filter_order'] == 4) echo "selected" ?>>
                         Downloads(Desc)
                     </option>
-                    <option value="5" <?php if (isset($_POST['filter_order']) && $_POST['filter_order'] == 5) echo "selected" ?>>
+                    <option value="5" <?php if (isset($_SESSION['filter_order']) && $_SESSION['filter_order'] == 5) echo "selected" ?>>
                         Date(Asc)
                     </option>
-                    <option value="6" <?php if (isset($_POST['filter_order']) && $_POST['filter_order'] == 6) echo "selected" ?>>
+                    <option value="6" <?php if (isset($_SESSION['filter_order']) && $_SESSION['filter_order'] == 6) echo "selected" ?>>
                         Date(Desc)
                     </option>
                 </select>
                 <label>Order By</label>
             </div>
-            <div class="input-field col s6 m3">
+            <div class="input-field col s6 m2">
                 <button type="submit" class="btn blue darken-4" id="filter_sent" name="filter_sent">Apply filter
+                </button>
+            </div>
+            <div class="input-field col s6 m1">
+                <button type="submit" class="btn red darken-4" id="filter_reset" name="filter_reset">Reset
                 </button>
             </div>
         </div>
@@ -245,11 +262,12 @@ $avail_langs = Lecture::get_avail_langs();
 <?php
 $lectures_count = Lecture::get_lectures_count();
 
-if (isset($_POST['filter_sent'])) {
-    $lang = $_POST['filter_language'];
-    $diff = $_POST['filter_diff'];
-    $ord = $_POST['filter_order'];
+if (isset($_SESSION['is_filtered'])) {
+    $lang = $_SESSION['filter_language'];
+    $diff = $_SESSION['filter_diff'];
+    $ord = $_SESSION['filter_order'];
     $lectures = Lecture::get_lectures_filtered($start_from, $page_entries, $lang, $diff, $ord);
+    $lectures_count = count($lectures);
 } else $lectures = Lecture::get_lectures($start_from, $page_entries);
 
 if ($lectures == null) {
@@ -297,13 +315,14 @@ if ($lectures == null) {
 
 
         echo "</tbody></table><ul class='pagination'>";
-        if ( !isset($_GET['page']) || $_GET['page'] <= 1 ) echo "<li class='waves-effect'><a href='#!'><i class='material-icons'>chevron_left</i></a></li>";
+        if ( !isset($_GET['page']) || $_GET['page'] == 1) echo "<li class='disabled'><a href='#!'><i class='material-icons'>chevron_left</i></a></li>";
         else echo "<li class='waves-effect'><a href='?page=".($_GET['page']-1)."'><i class='material-icons'>chevron_left</i></a></li>";
         for ($i = 1; $i < ($lectures_count / $page_entries) + 1; $i++) {
             if ((isset($_GET['page']) && $i == $_GET['page']) || (!isset($_GET['page']) && $i == 1)) echo "<li class='active blue'><a href='?page=$i'>$i</a></li>";
             else echo "<li class='waves-effect'><a href='?page=$i'>$i</a></li>";
         }
-        if (isset($_GET['page']) && $_GET['page'] >= ($lectures_count / $page_entries) ) echo "<li class='waves-effect'><a href='#!'><i class='material-icons'>chevron_right</i></a></li>";
+        if ((isset($_GET['page']) && $_GET['page'] == ($lectures_count / $page_entries)) || (!isset($_GET['page']) && ($lectures_count / $page_entries) <= 1)) echo "<li class='disabled'><a href='#!'><i class='material-icons'>chevron_right</i></a></li>";
+        elseif(!isset($_GET['page']) && ($lectures_count / $page_entries) > 1) echo "<li class='waves-effect'><a href='?page=2'><i class='material-icons'>chevron_right</i></a></li>";
         else echo "<li class='waves-effect'><a href='?page=".($_GET['page']+1)."'><i class='material-icons'>chevron_right</i></a></li>";
         echo "</ul>";
         echo "</div>";
