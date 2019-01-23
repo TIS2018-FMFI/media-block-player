@@ -112,6 +112,36 @@ class Lecture{
         return NULL;
     }
 
+    public static function get_lectures_filtered_count($lang, $diff, $ord){
+        global $mysqli;
+
+        $lang_sql = strcmp($lang, "Def") == 0 ? " " : " AND l.id = ".$lang;
+        $diff_sql = strcmp($diff, "Def") == 0 ? " " : " AND lec.difficulty = ".$diff;
+
+        $ord_sql = " ";
+
+        switch ($ord){
+            case "1": $ord_sql = " ORDER BY lec.name ASC"; break;
+            case "2": $ord_sql = " ORDER BY lec.name DESC"; break;
+            case "3": $ord_sql = " ORDER BY lec.download_count ASC"; break;
+            case "4": $ord_sql = " ORDER BY lec.download_count DESC"; break;
+            case "5": $ord_sql = " ORDER BY lec.download_count ASC"; break;
+            case "6": $ord_sql = " ORDER BY lec.download_count DESC"; break;
+        }
+
+        $res = array();
+
+        $sql = "SELECT lec.*, l.name AS l_name, l.abbr FROM mbp_lectures AS lec JOIN mbp_languages AS l ON lec.language_id = l.id WHERE lec.active = 1".
+            $lang_sql.
+            $diff_sql.
+            $ord_sql;
+
+        if(!$mysqli->connect_errno){
+            return mysqli_num_rows($mysqli->query($sql));
+        }
+        return -1;
+    }
+
     /**
      * @param int $lecture_id - id of lecture
      * @return array
