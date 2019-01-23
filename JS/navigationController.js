@@ -19,15 +19,18 @@ class NavigationController {
         this.actualController.navigationController = this;
         this.actualController.present();
     }
-    presentLastShownController(){
-      this.controllers.pop();
-      if (this.controllers.length == 0){
-        document.location.href=location;
-      }
-      else{
-        this.actualController = this.controllers[this.controllers.length - 1];
-        this.actualController.present();
-      }
+
+    /// Method for presenting last show controller. Call this method if you
+    /// want go back in your controllers stack.
+    presentLastShownController() {
+        this.controllers.pop();
+        if (this.controllers.length == 0) {
+            document.location.href = location;
+        }
+        else {
+            this.actualController = this.controllers[this.controllers.length-1];
+            this.actualController.present();
+        }
     }
 
 }
