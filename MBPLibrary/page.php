@@ -267,7 +267,13 @@ if (isset($_SESSION['is_filtered'])) {
     $diff = $_SESSION['filter_diff'];
     $ord = $_SESSION['filter_order'];
     $lectures = Lecture::get_lectures_filtered($start_from, $page_entries, $lang, $diff, $ord);
-    $lectures_count = count($lectures);
+    $tmp = $lang == "Def" && $diff == "Def" && $ord == "Def";
+    if ( $tmp ){
+        $lectures_count = Lecture::get_lectures_count();
+    }
+    else {
+        $lectures_count = count($lectures);
+    }
 } else $lectures = Lecture::get_lectures($start_from, $page_entries);
 
 if ($lectures == null) {
