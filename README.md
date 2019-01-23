@@ -4,6 +4,10 @@ Projekt TIS 2018/2019 Media Block Player
 
 ## Online Library
 
-http://www.st.fmph.uniba.sk/~hrebenar3/Projects/MBP/
+http://www.hrebenarm.tk/Projects/MBP/MBPLibrary/
 
 Prihlásenie: username -> admin | password -> admin
+
+## Application
+
+http://www.hrebenarm.tk/Projects/MBP/
