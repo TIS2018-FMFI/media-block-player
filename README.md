@@ -49,7 +49,7 @@ nie je viditeľný.
 Keď je zapnuté zobrazovanie paralelného prekladu, tak v hornom riadku je
 paralelný preklad orginálneho textu aktuálneho bloku.
 
-Keď je zapnutý zobrazovanie orginálneho textu tak v druhom riadku je text
+Keď je zapnuté zobrazovanie orginálneho textu, tak v druhom riadku je text
 aktuálneho bloku.
 
 Keď sme v režime 'Speaking check' alebo 'Pronounciation check' tak stredný
