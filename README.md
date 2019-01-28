@@ -38,7 +38,7 @@ Najprv si používateľ môže vybrať z rôznych režimov prehrávania ('First
 listening', 'Speaking check', 'Continual echoing', ...). Po vybratí režimu
 sa ešte dá paramentre prehrávania nastavovať ručne (Počet opakovaní, smer
 prehrávania, ...). 'Speaking check' a 'Pronounciation check' sa používa na
-kontrolu výslovanosti a slovnej zásoby preto treba vždy stlačiť kontrolný
+kontrolu výslovnosti a slovnej zásoby, preto treba vždy stlačiť kontrolný
 button pred prehratím bloku.
 
 Keď existuje viacero paralelných prekladov k lekcii, dá sa vybrať v akom jazyku
