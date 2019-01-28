@@ -41,10 +41,6 @@ class Player {
             this.pause = 500;
         }
 
-        if (this.playMode == "3" || this.playMode == "5") {
-            this.waitForBtn = true;
-        }
-
         if (settings["local"] == false) {
             this.sound = new Howl({
                 src: [settings['audio']],
@@ -52,6 +48,10 @@ class Player {
             });
         } else {
             this.sound = settings["audio"]
+        }
+
+        if (this.playMode == "3" || this.playMode == "5") {
+            this.waitForBtn = true;
         }
 
 

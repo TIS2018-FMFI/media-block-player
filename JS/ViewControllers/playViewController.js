@@ -11,7 +11,26 @@ class PlayViewController extends ViewController {
     }
 
     renderHtml(html) {
-        var waitBtn = this.settings['playMode'] == "3" || this.settings['playMode'] == "5" ? `<button class="btn-large waves-effect waves-light" id="play-sound-btn"><i class="material-icons">check_circle</i></button>` : '';
+        var controlBtns = "";
+
+        if (this.settings['playMode'] == "3" || this.settings['playMode'] == "5"){
+          controlBtns = `
+            <button class="btn-large" id="play-sound-btn">
+              <i class="material-icons">check_circle</i>
+            </button>
+            `;
+        }
+        else{
+          controlBtns = `
+            <button class="btn-large" id="play">
+              <i class="material-icons">play_arrow</i>
+            </button>
+
+            <button class="btn-large" id="pause">
+              <i class="material-icons">pause</i>
+            </button>
+            `;
+        }
 
         const htmlView = `
         <div class="container">
@@ -41,16 +60,7 @@ class PlayViewController extends ViewController {
                     <i class="material-icons">fast_rewind</i>
                   </button>
 
-                  <button class="btn-large" id="play">
-                    <i class="material-icons">play_arrow</i>
-                  </button>
-
-                  <button class="btn-large" id="pause">
-                    <i class="material-icons">pause</i>
-                  </button>
-                  ` +
-            waitBtn +
-            `
+                  ` + controlBtns + `
 
                   <button class="btn" id="forward">
                     <i class="material-icons">fast_forward</i>
@@ -96,6 +106,12 @@ class PlayViewController extends ViewController {
         if (this.settings['playMode'] == "3" || this.settings['playMode'] == "5") {
             this.checkBtn.on('click', this.checkAnswer);
         }
+    }
+
+    viewDidLoad() {
+      if (this.settings['playMode'] == "3" || this.settings['playMode'] == "5"){
+        this.player.play();
+      }
     }
 
     // private Methods
