@@ -34,6 +34,37 @@ V hlavnom menu aplikácie je tlačítko "CHOOSE MEDIA FROM DISK". Tu treba nahra
 V hlavnom menu aplikácie je tlačítko "CHOOSE MEDIA FROM ONLINE LIBRARY". Tu treba zvoliť jazyk, v akom chceme audio nahrávky počúvať. Potom si treba vybrať danú nahrávku, v nastaveniach si vybrať mód výučby a prejsť k samotnému prehrávaniu.
 
 ### Prehrávač
+Najprv používateľ si môže vybrať z rôznych režimov prehrávania ('First
+listening', 'Speaking check', 'Continual echoing', ...). Po vybratí režimu
+sa ešte dá paramentre prehrávania nastavovať ručne (Počet opakovaní, smer
+prehrávania, ...). 'Speaking check' a 'Pronounciation check' sa používa na
+kontrolu výslovanosti a slovnej zásoby preto treba vždy stlačiť kontrolný
+button pred prehratím bloku.
+
+Keď existuje a paralelný preklad k lekcie sa dá vybrať že v akom jazyku
+to chce používateľ mať. Keď existuje iba jeden paralelný preklad tak to
+je automaticky vybratý. Keď neexistuje paralelný preklad tak select box
+nie je viditeľný.
+
+Keď je zapnutý zobrazovanie paralelného prekladu tak v hornom riadku je
+paralelný preklad orginálneho textu aktuálneho bloku.
+
+Keď je zapnutý zobrazovanie orginálneho textu tak v druhom riadku je text
+aktuálneho bloku.
+
+Keď sme v režime 'Speaking check' alebo 'Pronounciation check' tak stredný
+button služi na overenia výsledku (vlastne použivateľ sa pokúsi vysloviť
+aktualný blok a potom po stlačšní vie overiť jeho schopnosti).
+
+V ostatných režimoch Pause a Play slúži na riadenie prehrávania. Keď
+prehrávanie je pozastavený a pustíme to znova tak ten blok sa prehrá od
+začiatku.
+
+Tlačidlo 'Back': skočí na predchádzajúcí blok. Keď sa dostane na začiatok
+blokov tak prehrávanie zastaví.
+
+Tlačidlo 'Forward': skočí na nasledujúci blok. Keď sa dostane na koniec
+blokov tak automaticky sa začne krokovať od začiatku.
 
 ### Online knižnica
 
