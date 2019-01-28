@@ -41,7 +41,7 @@ prehrávania, ...). 'Speaking check' a 'Pronounciation check' sa používa na
 kontrolu výslovanosti a slovnej zásoby preto treba vždy stlačiť kontrolný
 button pred prehratím bloku.
 
-Keď existuje a paralelný preklad k lekcie sa dá vybrať že v akom jazyku
+Keď existuje viacero paralelných prekladov k lekcii, dá sa vybrať v akom jazyku
 to chce používateľ mať. Keď existuje iba jeden paralelný preklad tak je
 je automaticky vybratý. Keď neexistuje paralelný preklad tak select box
 nie je viditeľný.
