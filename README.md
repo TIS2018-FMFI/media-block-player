@@ -46,7 +46,7 @@ to chce používateľ mať. Keď existuje iba jeden paralelný preklad tak je
 je automaticky vybratý. Keď neexistuje paralelný preklad tak select box
 nie je viditeľný.
 
-Keď je zapnutý zobrazovanie paralelného prekladu tak v hornom riadku je
+Keď je zapnuté zobrazovanie paralelného prekladu, tak v hornom riadku je
 paralelný preklad orginálneho textu aktuálneho bloku.
 
 Keď je zapnutý zobrazovanie orginálneho textu tak v druhom riadku je text
