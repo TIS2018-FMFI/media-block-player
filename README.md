@@ -34,7 +34,7 @@ V hlavnom menu aplikácie je tlačítko "CHOOSE MEDIA FROM DISK". Tu treba nahra
 V hlavnom menu aplikácie je tlačítko "CHOOSE MEDIA FROM ONLINE LIBRARY". Tu treba zvoliť jazyk, v akom chceme audio nahrávky počúvať. Potom si treba vybrať danú nahrávku, v nastaveniach si vybrať mód výučby a prejsť k samotnému prehrávaniu.
 
 ### Prehrávač
-Najprv používateľ si môže vybrať z rôznych režimov prehrávania ('First
+Najprv si používateľ môže vybrať z rôznych režimov prehrávania ('First
 listening', 'Speaking check', 'Continual echoing', ...). Po vybratí režimu
 sa ešte dá paramentre prehrávania nastavovať ručne (Počet opakovaní, smer
 prehrávania, ...). 'Speaking check' a 'Pronounciation check' sa používa na
