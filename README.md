@@ -68,4 +68,25 @@ blokov tak automaticky sa začne krokovať od začiatku.
 
 ### Online knižnica
 
+#### Registrácia
+Na hlavnej stránke v hornej navigačnej lište je tlačidlo "REGISTER". To vás po kliknutí presmetuje na stránku s registračným formulárom, kde je potrebné zadať všetky údaje. Po dokončení registrácie budete presmerovaný na stránku prihlásenia
+
+#### Prihlasovanie
+Na hlavnej stránke v hornej navigačnej lište je tlačidlo "LOGIN". To vás po kliknutí presmeruje na stránku s prihlasovacím formulárom, kde je potrebné zadať údaje pre overenie. Po úspešnom prihlásení budete presmerovaný na hlavnú stránku na ktorej sa zobrazí uvítacia správa.
+
+#### Pridávanie lekcie do knižnice
+Po úspešnom prihlásení do knižnice nájdete v pravom dolnom rohu okna prehliadača okrúhle tlačidlo s ikonou "+", ktoré vás po kliknutí presmeruje na stránku s formulárom pre pridanie novej lekcie. Tu je potrebné vyplniť potrebné informácie o lekcii a to názov, obtiažnosť a pôvodný jazyk. Popis lekcie nie je povinný zadávať. Ďalej je nutné vybrať súbory k lekcii. Povinné súbory sú Zvukový súbor (MEDIA), Prepis zvukového súboru (SCRIPT) v správnom formáte a Synchronizačný súbor (SYNC) vytvorený pomocou našej aplikácie (viď. návod vyššie). Ďalej po stlačení  zeleného okrúhleho tlačidla so symbolom "+" je možné pridávať ľubovoľný počet prekladových súborov (TRANSLATION) v správnom formáte a vybrať jazyk prekladu. Lekciu uložíte kliknutím na tlačidlo "SAVE LECTURE". Budete presmerovaný na uvodnú stránku so zoznamom lekcií, v ktorej ak všetko prebehlo správne nájdete aj vašu novú lekciu.
+
+#### Mazanie lekcie
+Po úspešnom prihlásení nájdete v hornej navigačnej lište aplikácie tlačidlo "PROFILE". To vás presmeruje na stránku váško profilu. Pod osobnými informáciami nájdete sekciu "My contributions", v ktorom (ak už máte pridané nejaké lekcie) zoznam lekcií. V každom riadku na pravej strane nájdete červené tlačidlo so symbolom "X". Po jeho kliknutí sa vám zobrazí výzva na potvrdenie akcie. Po kliknutí na tlačidlo "OK" bude lekcia zmazaná a vaša stránka s profilom sa znovu načíta.
+
 ## Inštalačná príručka
+Aplikácia požaduje server s databázovým systémom a s verziou PHP 5.6 alebo vyššiou.
+
+1. Stiahnite alebo naklonujte si obsah repozitára.
+2. Na požadované miesto na serveri umiestnite obsah repozitára tak ako je.
+3. Vo vašom databázovom systéme su vytvorte databázu a naimportujte do nej súbor mbp.sql alebo jeho obsah spustite v SQL interpreteri.
+4. V priečinku MBPLibrary v súbore db.php je potrebné zmeniť prístupové údaje k vašej databáze.
+   $mysqli = new mysqli('localhost', '[login_here]', '[password_here]', '[database_name_here]');
+   //$mysqli = new mysqli('localhost', 'hrebenar3', 'gaexe', 'hrebenar3'); //example
+5. Aplikácia je pripravená na použite.
