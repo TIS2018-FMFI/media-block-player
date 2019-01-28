@@ -57,7 +57,7 @@ button služi na overenia výsledku (vlastne použivateľ sa pokúsi vysloviť
 aktualný blok a potom po stlačení vie overiť jeho schopnosti).
 
 V ostatných režimoch Pause a Play slúži na riadenie prehrávania. Keď
-prehrávanie je pozastavený a pustíme to znova tak ten blok sa prehrá od
+je prehrávanie pozastavené a pustíme to znova, tak ten blok sa prehrá od
 začiatku.
 
 Tlačidlo 'Back': skočí na predchádzajúcí blok. Keď sa dostane na začiatok
