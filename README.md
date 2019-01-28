@@ -5,8 +5,8 @@ Projekt TIS 2018/2019 Media Block Player
 ## Online Library
 
 http://www.hrebenarm.tk/Projects/MBP/MBPLibrary/
+po registrácii je možné priávať a mazať svoje materiály
 
-Prihlásenie: username -> admin | password -> admin
 
 ## Application
 
