@@ -54,7 +54,7 @@ aktuálneho bloku.
 
 Keď sme v režime 'Speaking check' alebo 'Pronounciation check' tak stredný
 button služi na overenia výsledku (vlastne použivateľ sa pokúsi vysloviť
-aktualný blok a potom po stlačšní vie overiť jeho schopnosti).
+aktualný blok a potom po stlačení vie overiť jeho schopnosti).
 
 V ostatných režimoch Pause a Play slúži na riadenie prehrávania. Keď
 prehrávanie je pozastavený a pustíme to znova tak ten blok sa prehrá od
