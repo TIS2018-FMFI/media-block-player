@@ -42,7 +42,7 @@ kontrolu výslovanosti a slovnej zásoby preto treba vždy stlačiť kontrolný
 button pred prehratím bloku.
 
 Keď existuje a paralelný preklad k lekcie sa dá vybrať že v akom jazyku
-to chce používateľ mať. Keď existuje iba jeden paralelný preklad tak to
+to chce používateľ mať. Keď existuje iba jeden paralelný preklad tak je
 je automaticky vybratý. Keď neexistuje paralelný preklad tak select box
 nie je viditeľný.
 
