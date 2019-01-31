@@ -49,23 +49,6 @@ Page::page_footer();
     $(document).ready(function(){
         var $trans_index = 1;
 
-        $('#lecture_add').validate({
-            rules: {
-                lecture_media: {
-                    required: true,
-                    extension: "wav,mp3",
-                },
-                lecture_script: {
-                    required: true,
-                    extension: "txt",
-                },
-                lecture_sync: {
-                    required: true,
-                    extension: "mbpsf",
-                }
-            }
-        });
-
         $("#add_translation").click(function () {
             //console.log("klik ", $trans_index);
 
