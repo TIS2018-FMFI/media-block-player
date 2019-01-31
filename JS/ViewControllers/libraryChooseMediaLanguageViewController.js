@@ -10,8 +10,7 @@ class LibraryChooseMediaLanguageViewController extends ViewController{
         this.language;
         this.availableLanguages;
         this.languagePicker;
-        //this.url = "MBPLibrary/api.php";
-        this.url = "http://www.hrebenarm.tk/Projects/MBP/MBPLibrary/api.php";
+        this.url = "MBPLibrary/api.php";
     }
 
     renderHtml(html) {
