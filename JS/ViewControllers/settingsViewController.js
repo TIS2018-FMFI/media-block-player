@@ -8,7 +8,6 @@ class SettingsViewController extends ViewController {
         this.lecture = lecture;
         this.lectureData;
         this.local = local;
-
     }
 
     renderHtml(html) {
@@ -161,9 +160,6 @@ class SettingsViewController extends ViewController {
         </div>
         `;
         super.renderHtml(htmlView);
-
-        var elems = document.querySelectorAll('select');
-        var instances = M.FormSelect.init(elems);
     }
 
     setupProperties() {
@@ -177,8 +173,31 @@ class SettingsViewController extends ViewController {
         this.pause = $('#pause');
         this.repeat = $("#repeat");
         this.pauseRepeat = $("#pause_repeat");
+    }
 
-        this.checkAvailableTranslations();
+    viewDidLoad(){
+      if (this.lectureData != undefined){
+        this.playMode.val(this.lectureData['playMode']);
+        this.pause.val(this.lectureData['pause']);
+        this.pauseRepeat.val(this.lectureData['pauseRepeat']);
+        this.repeat.val(this.lectureData['repeat']);
+        this.script.prop('checked', this.lectureData['script']);
+        this.paralel.prop('checked', this.lectureData['trans']);
+        this.direction.prop('checked', this.lectureData['direction']);
+
+        this.pause.next("label").addClass('active');
+        this.repeat.next("label").addClass('active');
+        this.pauseRepeat.next("label").addClass('active');
+
+        if (this.lectureData['playMode'] == '3' || this.lectureData['playMode'] == '5'){
+          this.pause.prop('disabled', true);
+          this.pauseRepeat.prop('disabled', true);
+        }
+      }
+      this.checkAvailableTranslations();
+      
+      var elems = document.querySelectorAll('select');
+      var instances = M.FormSelect.init(elems);
     }
 
     setupEventListeners() {
@@ -255,6 +274,9 @@ class SettingsViewController extends ViewController {
             this.pause.next("label").addClass('active');
             this.repeat.next("label").addClass('active');
             this.pauseRepeat.next("label").addClass('active');
+
+            this.pause.prop('disabled', false);
+            this.pauseRepeat.prop('disabled', false);
         } else if (val == "2") {
             this.script.prop('checked', true);
             this.paralel.prop('checked', true);
@@ -266,6 +288,9 @@ class SettingsViewController extends ViewController {
             this.pause.next("label").addClass('active');
             this.repeat.next("label").addClass('active');
             this.pauseRepeat.next("label").addClass('active');
+
+            this.pause.prop('disabled', false);
+            this.pauseRepeat.prop('disabled', false);
         } else if (val == "3") {
             this.script.prop('checked', true);
             this.paralel.prop('checked', true);
@@ -277,6 +302,9 @@ class SettingsViewController extends ViewController {
             this.pause.next("label").addClass('active');
             this.repeat.next("label").addClass('active');
             this.pauseRepeat.next("label").addClass('active');
+
+            this.pause.prop('disabled', true);
+            this.pauseRepeat.prop('disabled', true);
         } else if (val == "4") {
             this.script.prop('checked', true);
             this.paralel.prop('checked', true);
@@ -288,8 +316,11 @@ class SettingsViewController extends ViewController {
             this.pause.next("label").addClass('active');
             this.repeat.next("label").addClass('active');
             this.pauseRepeat.next("label").addClass('active');
+
+            this.pause.prop('disabled', false);
+            this.pauseRepeat.prop('disabled', false);
         } else if (val == "5") {
-            this.script.prop('checked', true);
+            this.script.prop('checked', false);
             this.paralel.prop('checked', true);
             this.direction.prop('checked', false);
             this.pause.val("0");
@@ -299,6 +330,9 @@ class SettingsViewController extends ViewController {
             this.pause.next("label").addClass('active');
             this.repeat.next("label").addClass('active');
             this.pauseRepeat.next("label").addClass('active');
+
+            this.pause.prop('disabled', true);
+            this.pauseRepeat.prop('disabled', true);
         } else {
             this.pause.val("");
             this.repeat.val("");
@@ -311,8 +345,8 @@ class SettingsViewController extends ViewController {
             this.script.prop('disabled', false);
             this.paralel.prop('disabled', false);
             this.direction.prop('disabled', false);
-            this.pause.prop('disabled', false);
             this.repeat.prop('disabled', false);
+            this.pause.prop('disabled', false);
             this.pauseRepeat.prop('disabled', false);
         }
 
@@ -401,12 +435,17 @@ class SettingsViewController extends ViewController {
     }
 
     checkAvailableTranslations(){
-        if (this.lecture.translations != null){
+        if (!this.local && this.lecture.translations != null){
           var transCount = Object.keys(this.lecture.translations).length;
           if (transCount == 0){
             this.paralel.prop('checked', false);
             this.paralel.prop('disabled', true);
           }
+        }
+
+        if (this.local && this.lecture.paralelBlocks == undefined){
+          this.paralel.prop('checked', false);
+          this.paralel.prop('disabled', true);
         }
     }
 }
