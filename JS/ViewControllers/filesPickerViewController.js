@@ -7,6 +7,7 @@ class FilesPickerViewController extends ViewController {
 
         this.fileName;
         this.sound;
+        this.playbackSound;
         this.blocks;
     }
 
@@ -81,6 +82,7 @@ class FilesPickerViewController extends ViewController {
     presentNextController() {
         const syncFileCreateViewController = new SyncFileCreateViewController();
         syncFileCreateViewController.sound = this.sound;
+        syncFileCreateViewController.playbackSound = this.playbackSound;
         syncFileCreateViewController.blocks = this.blocks;
         syncFileCreateViewController.fileName = this.fileName;
         this.navigationController.present(syncFileCreateViewController);
@@ -97,6 +99,9 @@ class FilesPickerViewController extends ViewController {
         this.fileName = audioFile.name.split('.').slice(0, -1).join('.');
         this.getBase64(audioFile).then( data => {
             this.sound = new Howl({
+                src: data
+            });
+            this.playbackSound = new Howl({
                 src: data
             });
         });

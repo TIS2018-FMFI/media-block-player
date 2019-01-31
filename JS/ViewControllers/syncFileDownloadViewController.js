@@ -47,7 +47,7 @@ class SyncFileDownloadViewController extends ViewController {
     /// skip blocks array. Then it will create html download link with
     /// {filename}.mbpsf file
     showSyncFileDownload() {
-        const syncFileName = `${this.fileName}.mpbsf`;
+        const syncFileName = `${this.fileName}.mbpsf`;
         const syncFileObject = new Object();
         syncFileObject.blocks = this.blocksEndTimes;
         syncFileObject.skips = this.skipBlock;
