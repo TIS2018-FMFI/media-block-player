@@ -6,6 +6,7 @@ class SyncFileCreateViewController extends ViewController {
 
         this.fileName;
         this.sound;
+        this.playbackSound;
         this.blocks;
 
         this.blocksEndTimes = [] // End time of each block
@@ -68,6 +69,7 @@ class SyncFileCreateViewController extends ViewController {
         this.playActualButtonClicked = this.playActualButtonClicked.bind(this);
         this.skipBlockButtonClicked = this.skipBlockButtonClicked.bind(this);
         this.nextBlockButtonClicked = this.nextBlockButtonClicked.bind(this);
+        this.audioReachedEnd = this.audioReachedEnd.bind(this);
 
         this.playPauseButton.on('click', this.playPauseButtonClicked);
         this.backwardButton.on('click', this.backwardButtonClicked);
@@ -75,6 +77,7 @@ class SyncFileCreateViewController extends ViewController {
         this.playActualBlockButton.on('click', this.playActualButtonClicked);
         this.skipBlockButton.on('click', this.skipBlockButtonClicked);
         this.nextBlockButton.on('click', this.nextBlockButtonClicked);
+        this.sound.on('end', this.audioReachedEnd);
 
         const jKey = 106;
         const kKey = 107;
@@ -124,6 +127,12 @@ class SyncFileCreateViewController extends ViewController {
 
     // Private Methods
 
+    audioReachedEnd() {
+        const duration = this.sound.duration(); // last seek
+        this.blocksEndTimes.push( Math.round( duration * 100 ) / 100 );
+        this.fileCreatingFinished();
+    }
+
     playPauseButtonClicked() {
         if (this.sound.playing()) {
             this.sound.pause();
@@ -151,9 +160,9 @@ class SyncFileCreateViewController extends ViewController {
             lastPosition = this.blocksEndTimes[this.blocksEndTimes.length - 1];
         }
         const playbackLength = (this.actualSeek - lastPosition) * 1000;
-        this.sound._sprite.actual = [lastPosition * 1000, playbackLength];
-        this.sound.pause();
-        this.sound.play('actual');
+        this.playbackSound._sprite.actual = [lastPosition * 1000, playbackLength];
+        this.playbackSound.pause();
+        this.playbackSound.play('actual');
     }
 
     skipBlockButtonClicked() {
@@ -166,9 +175,7 @@ class SyncFileCreateViewController extends ViewController {
         if (this.creatingDone) {
             this.presentNextController();
         } else if (this.textBlockIndex === this.blocks.length - 1) {
-            this.actualBlockText.text('Sync file creating is done.');
-            this.nextBlockButton.text('FINISH');
-            this.creatingDone = true;
+            this.fileCreatingFinished();
         } else {
             this.actualSeek = this.sound.seek();
             this.blocksEndTimes.push( Math.round( this.sound.seek() * 100 ) / 100 );
@@ -176,6 +183,18 @@ class SyncFileCreateViewController extends ViewController {
             this.textBlockIndex++;
             this.actualBlockText.text( this.blocks[this.textBlockIndex] );
         }
+    }
+
+    fileCreatingFinished() {
+        this.backwardButton.attr('disabled', true);
+        this.playPauseButton.attr('disabled', true);
+        this.forwardButton.attr('disabled', true);
+        this.skipBlockButton.attr('disabled', true);
+        this.playActualBlockButton.attr('disabled', true);
+        this.playPauseIcon.text('play_circle_outline');
+        this.actualBlockText.text('Sync file creating is done.');
+        this.nextBlockButton.text('FINISH');
+        this.creatingDone = true;
     }
 
 }
