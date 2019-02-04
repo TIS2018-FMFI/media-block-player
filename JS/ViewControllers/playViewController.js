@@ -26,7 +26,7 @@ class PlayViewController extends ViewController {
               <i class="material-icons">play_arrow</i>
             </button>
 
-            <button class="btn-large" id="pause">
+            <button class="btn-large" id="pause" style="display: none;">
               <i class="material-icons">pause</i>
             </button>
             `;
@@ -53,7 +53,14 @@ class PlayViewController extends ViewController {
               </div>
             </div>
           </div>
-          <div class="row row-50">
+          <div class="row">
+            <div class="col m12 center">
+              <div class="progress">
+                  <div class="determinate" id="progress-bar" style="width: 0%"></div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
             <div class="col m12 center">
               <div id="control-btns">
                   <button class="btn" id="back">
@@ -80,6 +87,7 @@ class PlayViewController extends ViewController {
         this.nextBtn = $('#forward');
         this.backBtn = $('#back')
         this.backToSettingsBtn = $('#back-to-setting');
+        this.progressBar = $('#progress-bar');
 
         if (this.settings['playMode'] == '3' || this.settings['playMode'] == '5') {
             this.checkBtn = $('#play-sound-btn');
@@ -106,12 +114,29 @@ class PlayViewController extends ViewController {
         if (this.settings['playMode'] == "3" || this.settings['playMode'] == "5") {
             this.checkBtn.on('click', this.checkAnswer);
         }
+
+        this.setUpDefaultBtnOrder = this.setUpDefaultBtnOrder.bind(this);
+        $(document).on('lectureEndedEvent', this.setUpDefaultBtnOrder);
+        this.changeProgressBarWidth = this.changeProgressBarWidth.bind(this);
+        $(document).on('progressBarChangeEvent', this.changeProgressBarWidth);
+
     }
 
     viewDidLoad() {
       if (this.settings['playMode'] == "3" || this.settings['playMode'] == "5"){
         this.player.play();
       }
+    }
+
+    setUpDefaultBtnOrder(){
+      this.playBtn.css('display','inline-block');
+      this.pauseBtn.css('display', 'none');
+    }
+
+    changeProgressBarWidth(){
+      var newWidth = ((this.player.actualBlock + 1) / this.player.totalBlocks) * 100;
+      newWidth = newWidth > 100 ? 100 : newWidth;
+      this.progressBar.css('width', '' + newWidth + '%');
     }
 
     // private Methods
@@ -126,10 +151,14 @@ class PlayViewController extends ViewController {
             this.player.paused = false;
         }
         this.player.play();
+        this.playBtn.css('display', 'none');
+        this.pauseBtn.css('display', 'inline-block');
     }
 
     pauseLecture() {
         this.player.pauseSound();
+        this.playBtn.css('display','inline-block');
+        this.pauseBtn.css('display', 'none');
     }
 
     nextBlock() {

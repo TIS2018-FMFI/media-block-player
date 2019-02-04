@@ -30,17 +30,6 @@ class Player {
 
         this.blockOrder = this.setUpBlockOrder();
 
-        if (this.playMode == "1") {
-            this.blockRepeatCount = 0;
-            this.pauseRepeat = 0;
-        }
-
-        if (this.playMode == "2") {
-            this.blockRepeatCount = 1;
-            this.pauseRepeat = 2000;
-            this.pause = 500;
-        }
-
         if (settings["local"] == false) {
             this.sound = new Howl({
                 src: [settings['audio']],
@@ -82,8 +71,10 @@ class Player {
             var playDelay = this.playMode == "4" ? 500 : 0;
 
             setTimeout(function() {
-                if (!tmpPlayer.waitForBtn && !this.paused)
+                if (!tmpPlayer.waitForBtn && !this.paused){
                     tmpPlayer.sound.play('block_' + tmpPlayer.blockOrder[tmpPlayer.actualBlock]);
+                    $(document).trigger('progressBarChangeEvent');
+                }
 
                 var timeOutTime = 500;
 
@@ -108,6 +99,17 @@ class Player {
                     }, timeOutTime);
                 });
             }, playDelay)
+        }
+        else{
+          this.actualBlock = 0;
+          this.blockPlayedCount = 0;
+
+          if (this.playMode == "5" || this.playMode == "3"){
+            this.play();
+          }
+          else{
+            $(document).trigger('lectureEndedEvent');
+          }
         }
     }
 
@@ -193,6 +195,7 @@ class Player {
             document.getElementById('original-text').innerHTML = this.orginalTextBlocks[this.blockOrder[this.actualBlock]];
         }
         this.sound.play('block_' + this.blockOrder[this.actualBlock]);
+        $(document).trigger('progressBarChangeEvent');
     }
 
     // helper function to clear all tiemouts
