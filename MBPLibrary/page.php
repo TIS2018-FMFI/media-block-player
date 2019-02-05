@@ -656,7 +656,7 @@ if ($lectures == null) {
                         echo "<td>$lecture_name</td>";
                         echo "<td>$lecture_lang</td>";
                         if($lecture_diff == 1) echo "<td>A</td>";
-                        elseif($lecture_diff == 1) echo "<td>B</td>";
+                        elseif($lecture_diff == 2) echo "<td>B</td>";
                         else echo "<td>C</td>";
                         echo "<td></td>";
                         echo "<td>$lecture_down_count x</td>";
