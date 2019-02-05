@@ -10,7 +10,7 @@ include_once ('user.php');
 include_once ('page.php');
 include_once ('functions.php');
 
-Page::page_header('New lecture');
+Page::page_header('New article');
 Page::page_navbar();
 
 if(isset($_POST['save_lecture'])){
@@ -20,6 +20,18 @@ if(isset($_POST['save_lecture'])){
         $_SESSION['msg_status'] = "ERR";
     }
     else{
+        if (!file_exists('Data/Media/')) {
+            mkdir('Data/Media/', 0777, true);
+        }
+        if (!file_exists('Data/Scripts/')) {
+            mkdir('Data/Scripts/', 0777, true);
+        }
+        if (!file_exists('Data/Syncs/')) {
+            mkdir('Data/Syncs/', 0777, true);
+        }
+        if (!file_exists('Data/Translations/')) {
+            mkdir('Data/Translations/', 0777, true);
+        }
         $lec_id = Lecture::save_lecture($_POST, $_SESSION['id']);
         Lecture::save_lecture_files($_FILES, $_POST['lecture_title'], $lec_id);
         Lecture::save_lecture_translations($_FILES, $_POST,$lec_id);
@@ -31,7 +43,7 @@ if(isset($_POST['save_lecture'])){
 }
 
 if(!isset($_SESSION['id'])){
-    Page::error_card("You must be logged in to be able to add new lecture.");
+    Page::error_card("You must be logged in to be able to add new articlee.");
 }else {
   if (isset($_SESSION['msg'])) {
       Page::page_message($_SESSION['msg_status'], $_SESSION['msg']);
@@ -60,7 +72,7 @@ Page::page_footer();
                         .append(
                             $("<div class='btn'></div>")
                                 .append(
-                                    $("<span>Translation</span>")
+                                    $("<span>Parallel translation</span>")
                                 )
                                 .append(
                                     $("<input>")

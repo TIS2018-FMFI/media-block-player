@@ -20,6 +20,9 @@ if (isset($_GET['id'])){
         User::edit_profile($_POST, $_GET['id']);
         if($_FILES['picture'] && $_FILES['picture']['size'] > 0) {
             //var_dump($_FILES);
+            if (!file_exists('Pictures/Profiles/')) {
+                mkdir('Pictures/Profiles/', 0777, true);
+            }
             $target_dir = "Pictures/Profiles/";
             $target_file = $target_dir . basename($_FILES["picture"]["name"]);
             $uploadOk = 1;
@@ -186,7 +189,7 @@ Page::page_footer();
             console.log("klik" + lid);
             swal({
                 title: "Are you sure?",
-                text: "Once deleted, you will not be able to recover this lecture!",
+                text: "Once deleted, you will not be able to recover this article!",
                 icon: "warning",
                 buttons: true,
                 dangerMode: true,
@@ -208,7 +211,7 @@ Page::page_footer();
                 },
                 dataType: 'json',
                 success: function (data) {
-                    swal("Poof! Your lecture has been deleted!", {
+                    swal("Poof! Your article has been deleted!", {
                         icon: "success",
                     });
                     location.reload();

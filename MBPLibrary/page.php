@@ -212,13 +212,13 @@ elseif(isset($_POST['filter_reset']) || !isset($_GET['page'])){
                 <select id="filter_diff" name="filter_diff" required>
                     <option selected value="Def">All</option>
                     <option value="1" <?php if (isset($_SESSION['filter_diff']) && $_SESSION['filter_diff'] == 1) echo "selected" ?>>
-                        1
+                        A
                     </option>
                     <option value="2" <?php if (isset($_SESSION['filter_diff']) && $_SESSION['filter_diff'] == 2) echo "selected" ?>>
-                        2
+                        B
                     </option>
                     <option value="3" <?php if (isset($_SESSION['filter_diff']) && $_SESSION['filter_diff'] == 3) echo "selected" ?>>
-                        3
+                        C
                     </option>
                 </select>
                 <label>Difficulty</label>
@@ -272,7 +272,7 @@ if (isset($_SESSION['is_filtered'])) {
 } else $lectures = Lecture::get_lectures($start_from, $page_entries);
 
 if ($lectures == null) {
-    self::warning_card("No lectures found.");
+    self::warning_card("No articles found.");
     return;
 }
 ?>
@@ -282,10 +282,10 @@ if ($lectures == null) {
         <thead>
         <tr>
             <th>#</th>
-            <th>Lecture name</th>
-            <th>Lecture Language</th>
+            <th>Article name</th>
+            <th>Article Language</th>
             <th>Difficulty</th>
-            <th>Added</th>
+            <th>Length</th>
             <th>Downloads</th>
             <th></th>
         </tr>
@@ -306,7 +306,9 @@ if ($lectures == null) {
             echo "<td>$lecture_id</td>";
             echo "<td>$lecture_name</td>";
             echo "<td>$lecture_lang</td>";
-            echo "<td>$lecture_diff</td>";
+            if($lecture_diff == 1) echo "<td>A</td>";
+            elseif($lecture_diff == 1) echo "<td>B</td>";
+            else echo "<td>C</td>";
             echo "<td></td>";
             echo "<td>$lecture_down_count x</td>";
             echo "<td><a class='waves-effect waves-blue btn blue modal-trigger' href='#$modalname'><i class='fa fa-search'></i></a></td>";
@@ -357,11 +359,12 @@ if ($lectures == null) {
                     </p>
                     <p><strong>Description:</strong> <?php echo $lecture_desc ?></p>
                     <hr>
-                    <p><a href='<?php echo $lecture_media_link ?>' download class='btn waves-effect waves-blue blue'>Media
+                    <h5>Downloads</h5>
+                    <p><a href='<?php echo $lecture_media_link ?>' download class='btn waves-effect waves-blue blue'>Audio
                             File</a></p>
-                    <p><a href='<?php echo $lecture_text_link ?> ' download class='btn waves-effect waves-blue blue'>Script
+                    <p><a href='<?php echo $lecture_text_link ?> ' download class='btn waves-effect waves-blue blue'>Original script
                             File</a></p>
-                    <p><a href='<?php echo $lecture_sync_link ?> ' download class='btn waves-effect waves-blue blue'>Sync
+                    <p><a href='<?php echo $lecture_sync_link ?> ' download class='btn waves-effect waves-blue blue'>Sync file
                             File</a></p>
 
                     <?php
@@ -369,7 +372,7 @@ if ($lectures == null) {
                         foreach ($lecture['trans'] as $tran) {
                             $lang = $tran['l_name'];
                             $link = $tran['trans_link'];
-                            echo "\t\t\t\t<p><a href='$link' download class='btn waves-effect waves-blue blue'>Translation($lang) </a></p>\n";
+                            echo "\t\t\t\t<p><a href='$link' download class='btn waves-effect waves-blue blue'>Parallel translation ( $lang ) </a></p>\n";
                         }
                     }
                     ?>
@@ -620,7 +623,7 @@ if ($lectures == null) {
             $lectures = Lecture::get_user_lectures($user_id);
 
             if ($lectures == Null) {
-                self::warning_card("No lectures found");
+                self::warning_card("No articles found");
                 return;
             }
 
@@ -630,10 +633,10 @@ if ($lectures == null) {
                     <thead>
                     <tr>
                         <th>#</th>
-                        <th>Lecture name</th>
-                        <th>Lecture Language</th>
+                        <th>Article name</th>
+                        <th>Article Language</th>
                         <th>Difficulty</th>
-                        <th>Added</th>
+                        <th>Length</th>
                         <th>Downloads</th>
                         <th></th>
                     </tr>
@@ -652,10 +655,12 @@ if ($lectures == null) {
                         echo "<td>$lecture_id</td>";
                         echo "<td>$lecture_name</td>";
                         echo "<td>$lecture_lang</td>";
-                        echo "<td>$lecture_diff</td>";
+                        if($lecture_diff == 1) echo "<td>A</td>";
+                        elseif($lecture_diff == 1) echo "<td>B</td>";
+                        else echo "<td>C</td>";
                         echo "<td></td>";
                         echo "<td>$lecture_down_count x</td>";
-                        if ($_GET['id'] == $_SESSION['id']) echo "<td> <button data-swal_id='swal_$modalname' data-swal_lec_id='$lecture_id' class='waves-effect waves-blue btn red swalbtn'><i class='fa fa-times'></i></button> <a class='waves-effect waves-blue btn blue modal-trigger' href='#$modalname'><i class='fa fa-search'></i></a></td>";
+                        if ($_GET['id'] == $_SESSION['id'] || $_SESSION['admin'] == 1) echo "<td> <button data-swal_id='swal_$modalname' data-swal_lec_id='$lecture_id' class='waves-effect waves-blue btn red swalbtn'><i class='fa fa-times'></i></button> <a class='waves-effect waves-blue btn blue modal-trigger' href='#$modalname'><i class='fa fa-search'></i></a></td>";
                         else echo "<td><a class='waves-effect waves-blue btn blue modal-trigger' href='#$modalname'><i class='fa fa-search'></i></a></td>";
                         echo "</tr>";
                     }
@@ -694,10 +699,11 @@ if ($lectures == null) {
                         </p>
                         <p><strong>Description:</strong> <?php echo $lecture_desc ?></p>
                         <hr>
+                        <h5>Download:</h5>
                         <p><a href='<?php echo $lecture_media_link ?>' download
-                              class='btn waves-effect waves-blue blue'>Media File</a></p>
+                              class='btn waves-effect waves-blue blue'>Audio</a></p>
                         <p><a href='<?php echo $lecture_text_link ?> ' download
-                              class='btn waves-effect waves-blue blue'>Script File</a></p>
+                              class='btn waves-effect waves-blue blue'>Original script</a></p>
                         <p><a href='<?php echo $lecture_sync_link ?> ' download
                               class='btn waves-effect waves-blue blue'>Sync File</a></p>
 
@@ -706,7 +712,7 @@ if ($lectures == null) {
                             foreach ($lecture['trans'] as $tran) {
                                 $lang = $tran['l_name'];
                                 $link = $tran['trans_link'];
-                                echo "\t\t\t\t<p><a href='$link' download class='btn waves-effect waves-blue blue'>Translation($lang) </a></p>\n";
+                                echo "\t\t\t\t<p><a href='$link' download class='btn waves-effect waves-blue blue'>Parallel translation ( $lang ) </a></p>\n";
                             }
                         }
                         ?>
@@ -907,7 +913,7 @@ if ($lectures == null) {
 
                         <div class="row" style="margin-top: 3em">
                             <div class="input-field col s12 m8 offset-m2">
-                                <label for="lecture_title">Lecture title</label>
+                                <label for="lecture_title">Article title</label>
                                 <input type="text" id="lecture_title" name="lecture_title" required
                                        value="<?php if (isset($_POST['lecture_title'])) echo $_POST['lecture_title'] ?>">
                             </div>
@@ -917,7 +923,7 @@ if ($lectures == null) {
                             <div class="input-field col s12 m8 offset-m2">
                                 <textarea id="lecture_description" class="materialize-textarea"
                                           name="lecture_description"><?php if (isset($_POST['lecture_description'])) echo $_POST['lecture_description'] ?></textarea>
-                                <label for="lecture_description">Lecture Description</label>
+                                <label for="lecture_description">Article Description</label>
                             </div>
                         </div>
 
@@ -926,13 +932,13 @@ if ($lectures == null) {
                                 <select id="lecture_diff" name="lecture_diff">
                                     <option value="" selected disabled>Choose level of difficulty...</option>
                                     <option value="1" <?php if (isset($_POST['lecture_diff']) && $_POST['lecture_diff'] == 1) echo "selected" ?>>
-                                        1
+                                        A
                                     </option>
                                     <option value="2" <?php if (isset($_POST['lecture_diff']) && $_POST['lecture_diff'] == 2) echo "selected" ?>>
-                                        2
+                                        B
                                     </option>
                                     <option value="3" <?php if (isset($_POST['lecture_diff']) && $_POST['lecture_diff'] == 3) echo "selected" ?>>
-                                        3
+                                        C
                                     </option>
                                 </select>
                                 <label>Difficulty level</label>
@@ -955,7 +961,7 @@ if ($lectures == null) {
                         <div class="row">
                             <div class="file-field input-field col s12 m8 offset-m2">
                                 <div class="btn">
-                                    <span>Media</span>
+                                    <span>Audio</span>
                                     <input type="file" name='lecture_media' id='lecture_media' accept="audio/*"
                                            required>
                                 </div>
@@ -968,7 +974,7 @@ if ($lectures == null) {
                         <div class="row">
                             <div class="file-field input-field col s12 m8 offset-m2">
                                 <div class="btn">
-                                    <span>Script</span>
+                                    <span>Original script</span>
                                     <input type="file" name='lecture_script' id='lecture_script' accept=".txt" required>
                                 </div>
                                 <div class="file-path-wrapper">
@@ -980,7 +986,7 @@ if ($lectures == null) {
                         <div class="row">
                             <div class="file-field input-field col s12 m8 offset-m2">
                                 <div class="btn">
-                                    <span>Sync</span>
+                                    <span>Sync file</span>
                                     <input type="file" name='lecture_sync' id='lecture_sync' accept=".mbpsf" required>
                                 </div>
                                 <div class="file-path-wrapper">
@@ -1003,11 +1009,11 @@ if ($lectures == null) {
                         </div>
                         <div class="row center-align">
                             <div class="input-field col s6 m3 offset-m3">
-                                <button type="submit" class="btn green waves-effect" name="save_lecture">Save lecture
+                                <button type="submit" class="btn green waves-effect" name="save_lecture">Save article
                                     <i class="material-icons right">check</i></button>
                             </div>
                             <div class="input-field col s6 m3">
-                                <a href="index.php" class="btn red lighten-2 waves-effect">Discard lecture
+                                <a href="index.php" class="btn red lighten-2 waves-effect">Discard article
                                     <i class="material-icons right">clear</i></a>
                             </div>
                         </div>
