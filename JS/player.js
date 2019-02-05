@@ -15,7 +15,6 @@ class Player {
         this.settings = settings;
 
         this.playTimeOut = null;
-
         this.paused = false;
         this.pausedBlock = 0;
         this.pausedBlockRepeat = 0;
@@ -27,8 +26,9 @@ class Player {
         this.blockPlayedCount = 0;
 
         this.waitForBtn = false;
-
         this.blockOrder = this.setUpBlockOrder();
+
+
 
         if (settings["local"] == false) {
             this.sound = new Howl({
@@ -39,8 +39,12 @@ class Player {
             this.sound = settings["audio"]
         }
 
-        if (this.playMode == "3" || this.playMode == "5") {
+        if (this.playMode == "3" || this.playMode == "5" || this.playMode == "1" || this.pause == 99000) {
             this.waitForBtn = true;
+        }
+
+        if (this.pause == 99000) {
+            this.pause = 0;
         }
 
 
@@ -70,46 +74,45 @@ class Player {
 
             var playDelay = this.playMode == "4" ? 500 : 0;
 
-            setTimeout(function() {
-                if (!tmpPlayer.waitForBtn && !this.paused){
+            if (!tmpPlayer.waitForBtn && !this.paused) {
+                setTimeout(function() {
                     tmpPlayer.sound.play('block_' + tmpPlayer.blockOrder[tmpPlayer.actualBlock]);
                     $(document).trigger('progressBarChangeEvent');
-                }
+                }, playDelay)
+            }
 
-                var timeOutTime = 500;
+            var timeOutTime = 500;
+
+            if (this.blockPlayedCount < this.blockRepeatCount) {
+                timeOutTime = this.pauseRepeat;
+            } else {
+                timeOutTime = this.pause;
+            }
+
+            tmpPlayer.sound.once('end', function() {
+                if (tmpPlayer.paused)
+                    return;
 
                 if (tmpPlayer.blockPlayedCount < tmpPlayer.blockRepeatCount) {
-                    timeOutTime = tmpPlayer.pauseRepeat;
+                    tmpPlayer.blockPlayedCount++;
                 } else {
-                    timeOutTime = tmpPlayer.pause;
+                    tmpPlayer.actualBlock++;
+                    tmpPlayer.blockPlayedCount = 0;
                 }
 
-                tmpPlayer.sound.once('end', function() {
-                    tmpPlayer.playTimeOut = setTimeout(function() {
-                        if (tmpPlayer.paused)
-                            return;
+                setTimeout(function() {
+                    tmpPlayer.play();
+                }, timeOutTime);
+            });
+        } else {
+            this.actualBlock = 0;
+            this.blockPlayedCount = 0;
 
-                        if (tmpPlayer.blockPlayedCount < tmpPlayer.blockRepeatCount) {
-                            tmpPlayer.blockPlayedCount++;
-                        } else {
-                            tmpPlayer.actualBlock++;
-                            tmpPlayer.blockPlayedCount = 0;
-                        }
-                        tmpPlayer.play();
-                    }, timeOutTime);
-                });
-            }, playDelay)
-        }
-        else{
-          this.actualBlock = 0;
-          this.blockPlayedCount = 0;
-
-          if (this.playMode == "5" || this.playMode == "3"){
-            this.play();
-          }
-          else{
-            $(document).trigger('lectureEndedEvent');
-          }
+            if (this.playMode == "5" || this.playMode == "3" || this.playMode == "1") {
+                this.play();
+            } else {
+                $(document).trigger('lectureEndedEvent');
+            }
         }
     }
 
