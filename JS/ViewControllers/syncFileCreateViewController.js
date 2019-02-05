@@ -136,6 +136,7 @@ class SyncFileCreateViewController extends ViewController {
     playPauseButtonClicked() {
         if (this.sound.playing()) {
             this.sound.pause();
+            this.sound.seek( this.sound.seek() - 0.05 );
             this.actualSeek = this.sound.seek();
             this.playPauseIcon.text('play_circle_outline');
         } else {

@@ -24,7 +24,7 @@ class FilesPickerViewController extends ViewController {
                         <form action="#">
                             <div class="file-field input-field">
                                 <div class="btn">
-                                    <span><i class="material-icons right">audiotrack</i>Audio File</span>
+                                    <span><i class="material-icons right">audiotrack</i>Audio</span>
                                     <input id="audio-file-picker" type="file" accept=".wav, .mp3" />
                                 </div>
                                 <div class="file-path-wrapper">
@@ -37,7 +37,7 @@ class FilesPickerViewController extends ViewController {
                         <form action="#">
                             <div class="file-field input-field">
                                 <div class="btn">
-                                    <span><i class="material-icons right">description</i>Text File</span>
+                                    <span><i class="material-icons right">description</i>Original Script</span>
                                     <input id="rewritten-audio-file-picker" type="file" accept=".txt" />
                                 </div>
                                 <div class="file-path-wrapper">
