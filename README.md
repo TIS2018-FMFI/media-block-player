@@ -4,13 +4,13 @@ Projekt TIS 2018/2019 Media Block Player
 
 ## Online knižnica k aplikácii Media Block Player
 
-http://www.hrebenarm.tk/Projects/MBP/MBPLibrary/
+https://kempelen.dai.fmph.uniba.sk/lb/MBPLibrary/
 po registrácii je možné priávať a mazať svoje materiály
 
 
 ## Aplikácia Media Block Player
 
-http://www.hrebenarm.tk/Projects/MBP/
+https://kempelen.dai.fmph.uniba.sk/lb/
 
 
 ## Práca s aplikáciou
