@@ -28,8 +28,6 @@ class Player {
         this.waitForBtn = false;
         this.blockOrder = this.setUpBlockOrder();
 
-
-
         if (settings["local"] == false) {
             this.sound = new Howl({
                 src: [settings['audio']],
@@ -39,15 +37,9 @@ class Player {
             this.sound = settings["audio"]
         }
 
-        if (this.playMode == "3" || this.playMode == "5" || this.playMode == "1" || this.pause == 99000) {
+        if (this.playMode == "3" || this.playMode == "5" || this.playMode == "1") {
             this.waitForBtn = true;
         }
-
-        if (this.pause == 99000) {
-            this.pause = 0;
-        }
-
-
     }
 
     // This method starts playing the lecture.
@@ -82,7 +74,6 @@ class Player {
             }
 
             var timeOutTime = 500;
-
             if (this.blockPlayedCount < this.blockRepeatCount) {
                 timeOutTime = this.pauseRepeat;
             } else {
