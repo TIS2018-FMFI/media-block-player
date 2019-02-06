@@ -14,27 +14,24 @@ class SettingsViewController extends ViewController {
         var langOptions = "";
         if (this.lecture.translations != null) {
             var transCount = Object.keys(this.lecture.translations).length;
-            if (transCount == 0){
-              langOptions += "<input type='hidden' name='translation-lang' value='' id='translation-lang' class='hide'>";
+            if (transCount == 0) {
+                langOptions += "<input type='hidden' name='translation-lang' value='' id='translation-lang' class='hide'>";
+            } else if (transCount == 1) {
+                langOptions += "<select name='translation-lang' id='translation-lang' class='disabled' disabled>";
+                langOptions += "<option value=''>Choose your option</option>";
+                for (var lang in this.lecture.translations) {
+                    langOptions += "<option value='" + this.lecture.translations[lang] + "' selected>" + lang + "</option>";
+                }
+                langOptions += "</select>";
+                langOptions += "<label>Paralel text</label>";
+            } else {
+                langOptions += "<select name='translation-lang' id='translation-lang'>";
+                for (var lang in this.lecture.translations) {
+                    langOptions += "<option value='" + this.lecture.translations[lang] + "'>" + lang + "</option>";
+                }
+                langOptions += "</select>";
+                langOptions += "<label>Paralel text</label>";
             }
-            else if (transCount == 1){
-              langOptions += "<select name='translation-lang' id='translation-lang' class='disabled' disabled>";
-              langOptions += "<option value=''>Choose your option</option>";
-              for (var lang in this.lecture.translations) {
-                  langOptions += "<option value='" + this.lecture.translations[lang] + "' selected>" + lang + "</option>";
-              }
-              langOptions += "</select>";
-              langOptions += "<label>Paralel text</label>";
-            }
-            else{
-              langOptions += "<select name='translation-lang' id='translation-lang'>";
-              for (var lang in this.lecture.translations) {
-                  langOptions += "<option value='" + this.lecture.translations[lang] + "'>" + lang + "</option>";
-              }
-              langOptions += "</select>";
-              langOptions += "<label>Paralel text</label>";
-            }
-
         } else {
             langOptions += "<input type='hidden' name='translation-lang' value='' id='translation-lang' class='hide'>";
         }
@@ -73,25 +70,25 @@ class SettingsViewController extends ViewController {
               <div class="col s12">
                 <div class="divider"></div>
               </div>
-              <div class="col s12 l6">
+              <div class="col s12 l5">
                 <div class="row row-50">
                   <div class="col s10 offset-s1">
                     <div class="input-field col s12">
-                      <input id="pause" type="number" min="0" max="20" name="pause" class="validate">
+                      <input id="pause" type="number" min="0" max="99" name="pause" class="validate">
                       <label for="pause">Pause between blocks (sec)</label>
                     </div>
                     <div class="input-field col s12">
-                      <input id="repeat" type="number" min="0" max="20" name="repeat" class="validate">
+                      <input id="repeat" type="number" min="0" max="99" name="repeat" class="validate">
                       <label for="repeat">Block repeats</label>
                     </div>
                     <div class="input-field col s12">
-                      <input id="pause_repeat" type="number" min="0" max="20" name="pause_repeat" class="validate">
+                      <input id="pause_repeat" type="number" min="0" max="99" name="pause_repeat" class="validate">
                       <label for="pause_repeat">Pause between repeating blocks (sec)</label>
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="col s12 l6">
+              <div class="col s12 l7">
                 <div class="row row-50">
                   <div class="col s10 offset-s1">
                         <div class="row flex">
@@ -114,7 +111,7 @@ class SettingsViewController extends ViewController {
                         </div>
                         <div class="row">
                           <div class="col s4">
-                            <p>Script</p>
+                            <p>Original script</p>
                           </div>
                           <div class="col s8">
                             <p>
@@ -127,7 +124,7 @@ class SettingsViewController extends ViewController {
                         </div>
                         <div class="row">
                           <div class="col s4">
-                            <p>Translation</p>
+                            <p>Paralel translation</p>
                           </div>
                           <div class="col s8">
                             <p>
@@ -175,29 +172,36 @@ class SettingsViewController extends ViewController {
         this.pauseRepeat = $("#pause_repeat");
     }
 
-    viewDidLoad(){
-      if (this.lectureData != undefined){
-        this.playMode.val(this.lectureData['playMode']);
-        this.pause.val(this.lectureData['pause']);
-        this.pauseRepeat.val(this.lectureData['pauseRepeat']);
-        this.repeat.val(this.lectureData['repeat']);
-        this.script.prop('checked', this.lectureData['script']);
-        this.paralel.prop('checked', this.lectureData['trans']);
-        this.direction.prop('checked', this.lectureData['direction']);
+    viewDidLoad() {
+        if (this.lectureData != undefined) {
+            this.playMode.val(this.lectureData['playMode']);
+            this.pause.val(this.lectureData['pause']);
+            this.pauseRepeat.val(this.lectureData['pauseRepeat']);
+            this.repeat.val(this.lectureData['repeat']);
+            this.script.prop('checked', this.lectureData['script']);
+            this.paralel.prop('checked', this.lectureData['trans']);
+            this.direction.prop('checked', this.lectureData['direction']);
 
-        this.pause.next("label").addClass('active');
-        this.repeat.next("label").addClass('active');
-        this.pauseRepeat.next("label").addClass('active');
+            this.pause.next("label").addClass('active');
+            this.repeat.next("label").addClass('active');
+            this.pauseRepeat.next("label").addClass('active');
 
-        if (this.lectureData['playMode'] == '3' || this.lectureData['playMode'] == '5'){
-          this.pause.prop('disabled', true);
-          this.pauseRepeat.prop('disabled', true);
+            if (this.lectureData['playMode'] == '3' || this.lectureData['playMode'] == '5') {
+                this.pause.prop('disabled', true);
+                this.pauseRepeat.prop('disabled', true);
+            }
+            if (this.lectureData['playMode'] == '1') {
+                this.pause.prop('disabled', true);
+                this.pauseRepeat.prop('disabled', true);
+                this.repeat.prop('disabled', true);
+                this.paralel.prop('checked', true);
+                this.paralel.prop('disabled', true);
+            }
         }
-      }
-      this.checkAvailableTranslations();
-      
-      var elems = document.querySelectorAll('select');
-      var instances = M.FormSelect.init(elems);
+        this.checkAvailableTranslations();
+
+        var elems = document.querySelectorAll('select');
+        var instances = M.FormSelect.init(elems);
     }
 
     setupEventListeners() {
@@ -216,7 +220,6 @@ class SettingsViewController extends ViewController {
     }
 
     // private methots
-
     onBackBtnClick() {
         this.navigationController.presentLastShownController();
     }
@@ -275,8 +278,14 @@ class SettingsViewController extends ViewController {
             this.repeat.next("label").addClass('active');
             this.pauseRepeat.next("label").addClass('active');
 
-            this.pause.prop('disabled', false);
-            this.pauseRepeat.prop('disabled', false);
+            this.pause.prop('disabled', true);
+            this.pauseRepeat.prop('disabled', true);
+            this.repeat.prop('disabled', true);
+            this.script.prop('checked', false);
+            this.paralel.prop('checked', true);
+            this.script.prop('disabled', true);
+            this.paralel.prop('disabled', true);
+
         } else if (val == "2") {
             this.script.prop('checked', true);
             this.paralel.prop('checked', true);
@@ -291,6 +300,10 @@ class SettingsViewController extends ViewController {
 
             this.pause.prop('disabled', false);
             this.pauseRepeat.prop('disabled', false);
+            this.script.prop('disabled', false);
+            this.paralel.prop('disabled', false);
+            this.repeat.prop('disabled', false);
+
         } else if (val == "3") {
             this.script.prop('checked', true);
             this.paralel.prop('checked', true);
@@ -305,6 +318,9 @@ class SettingsViewController extends ViewController {
 
             this.pause.prop('disabled', true);
             this.pauseRepeat.prop('disabled', true);
+            this.script.prop('disabled', false);
+            this.paralel.prop('disabled', false);
+            this.repeat.prop('disabled', false);
         } else if (val == "4") {
             this.script.prop('checked', true);
             this.paralel.prop('checked', true);
@@ -319,6 +335,9 @@ class SettingsViewController extends ViewController {
 
             this.pause.prop('disabled', false);
             this.pauseRepeat.prop('disabled', false);
+            this.script.prop('disabled', false);
+            this.paralel.prop('disabled', false);
+            this.repeat.prop('disabled', false);
         } else if (val == "5") {
             this.script.prop('checked', false);
             this.paralel.prop('checked', true);
@@ -333,6 +352,9 @@ class SettingsViewController extends ViewController {
 
             this.pause.prop('disabled', true);
             this.pauseRepeat.prop('disabled', true);
+            this.script.prop('disabled', false);
+            this.paralel.prop('disabled', false);
+            this.repeat.prop('disabled', false);
         } else {
             this.pause.val("");
             this.repeat.val("");
@@ -434,18 +456,18 @@ class SettingsViewController extends ViewController {
         return result;
     }
 
-    checkAvailableTranslations(){
-        if (!this.local && this.lecture.translations != null){
-          var transCount = Object.keys(this.lecture.translations).length;
-          if (transCount == 0){
-            this.paralel.prop('checked', false);
-            this.paralel.prop('disabled', true);
-          }
+    checkAvailableTranslations() {
+        if (!this.local && this.lecture.translations != null) {
+            var transCount = Object.keys(this.lecture.translations).length;
+            if (transCount == 0) {
+                this.paralel.prop('checked', false);
+                this.paralel.prop('disabled', true);
+            }
         }
 
-        if (this.local && this.lecture.paralelBlocks == undefined){
-          this.paralel.prop('checked', false);
-          this.paralel.prop('disabled', true);
+        if (this.local && this.lecture.paralelBlocks == undefined) {
+            this.paralel.prop('checked', false);
+            this.paralel.prop('disabled', true);
         }
     }
 }

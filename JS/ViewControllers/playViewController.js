@@ -13,15 +13,16 @@ class PlayViewController extends ViewController {
     renderHtml(html) {
         var controlBtns = "";
 
-        if (this.settings['playMode'] == "3" || this.settings['playMode'] == "5"){
-          controlBtns = `
-            <button class="btn-large" id="play-sound-btn">
-              <i class="material-icons">check_circle</i>
-            </button>
-            `;
-        }
-        else{
-          controlBtns = `
+        if (this.isCheckingActive()) {
+            controlBtns += `<button class="btn-large" id="play-sound-btn">`
+            if (this.settings['playMode'] == "1") {
+                controlBtns += `<i class="material-icons">play_arrow</i>`;
+            } else {
+                controlBtns += `<i class="material-icons">check_circle</i>`;
+            }
+            controlBtns += `</button> `
+        } else {
+            controlBtns = `
             <button class="btn-large" id="play">
               <i class="material-icons">play_arrow</i>
             </button>
@@ -89,7 +90,7 @@ class PlayViewController extends ViewController {
         this.backToSettingsBtn = $('#back-to-setting');
         this.progressBar = $('#progress-bar');
 
-        if (this.settings['playMode'] == '3' || this.settings['playMode'] == '5') {
+        if (this.isCheckingActive()) {
             this.checkBtn = $('#play-sound-btn');
         }
     }
@@ -101,7 +102,7 @@ class PlayViewController extends ViewController {
         this.pauseLecture = this.pauseLecture.bind(this);
         this.backToSettings = this.backToSettings.bind(this);
 
-        if (this.settings['playMode'] == "3" || this.settings['playMode'] == "5") {
+        if (this.isCheckingActive()) {
             this.checkAnswer = this.checkAnswer.bind(this);
         }
 
@@ -111,7 +112,7 @@ class PlayViewController extends ViewController {
         this.backBtn.on('click', this.previousBlock);
         this.backToSettingsBtn.on('click', this.backToSettings);
 
-        if (this.settings['playMode'] == "3" || this.settings['playMode'] == "5") {
+        if (this.isCheckingActive()) {
             this.checkBtn.on('click', this.checkAnswer);
         }
 
@@ -123,23 +124,31 @@ class PlayViewController extends ViewController {
     }
 
     viewDidLoad() {
-      if (this.settings['playMode'] == "3" || this.settings['playMode'] == "5"){
-        this.player.play();
-      }
-    }
-
-    setUpDefaultBtnOrder(){
-      this.playBtn.css('display','inline-block');
-      this.pauseBtn.css('display', 'none');
-    }
-
-    changeProgressBarWidth(){
-      var newWidth = ((this.player.actualBlock + 1) / this.player.totalBlocks) * 100;
-      newWidth = newWidth > 100 ? 100 : newWidth;
-      this.progressBar.css('width', '' + newWidth + '%');
+        if (this.isCheckingActive()) {
+            this.player.play();
+        }
     }
 
     // private Methods
+    isCheckingActive() {
+        if (this.settings['playMode'] == "3" || this.settings['playMode'] == "5" || this.settings['playMode'] == "1") {
+            return true;
+        }
+
+        return false;
+    }
+
+    setUpDefaultBtnOrder() {
+        this.playBtn.css('display', 'inline-block');
+        this.pauseBtn.css('display', 'none');
+    }
+
+    changeProgressBarWidth() {
+        var newWidth = ((this.player.actualBlock + 1) / this.player.totalBlocks) * 100;
+        newWidth = newWidth > 100 ? 100 : newWidth;
+        this.progressBar.css('width', '' + newWidth + '%');
+    }
+
     backToSettings() {
         this.player.sound.stop();
         this.player.clearAllTimeOuts();
@@ -157,7 +166,7 @@ class PlayViewController extends ViewController {
 
     pauseLecture() {
         this.player.pauseSound();
-        this.playBtn.css('display','inline-block');
+        this.playBtn.css('display', 'inline-block');
         this.pauseBtn.css('display', 'none');
     }
 
