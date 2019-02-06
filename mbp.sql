@@ -95,7 +95,8 @@ INSERT INTO `mbp_languages` (`id`, `name`, `abbr`) VALUES
 (54, 'Turkish', 'tr'),
 (55, 'Ukrainian', 'uk'),
 (56, 'Vietnamese', 'vi'),
-(57, 'Welsh', 'cy');
+(57, 'Welsh', 'cy'),
+(58, 'Others', 'NaN');
 
 -- --------------------------------------------------------
 

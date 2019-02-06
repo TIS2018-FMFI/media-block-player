@@ -86,9 +86,9 @@ Aplikácia požaduje server s databázovým systémom a s verziou PHP 5.6 alebo 
 1. Stiahnite alebo naklonujte si obsah repozitára.
 2. Na požadované miesto na serveri umiestnite obsah repozitára tak ako je.
 3. Vo vašom databázovom systéme su vytvorte databázu a naimportujte do nej súbor mbp.sql alebo jeho obsah spustite v SQL interpreteri.
-4. V priečinku MBPLibrary v súbore db.php je potrebné zmeniť prístupové údaje k vašej databáze.
+4. V priečinku MBPLibrary v súbore db.example.php je potrebné zmeniť prístupové údaje k vašej databáze a zmeniť jeho názov na db.php .
    ```
    $mysqli = new mysqli('localhost', '[login_here]', '[password_here]', '[database_name_here]');
-   //$mysqli = new mysqli('localhost', 'hrebenar3', 'gaexe', 'hrebenar3'); //example
+   //$mysqli = new mysqli('localhost', 'MBPMaster', 'LanguageKing', 'MBP'); //example
    ```
 5. Aplikácia je pripravená na použite.
