@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @author Martin Hrebeòár
+ * @author Martin Hrebeňár
  */
 
 /**
