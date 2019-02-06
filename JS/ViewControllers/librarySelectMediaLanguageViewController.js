@@ -60,7 +60,6 @@ class LibrarySelectMediaLanguageViewController extends ViewController {
       }
 
       setupProperties() {
-          // this.selectMediaButton = $('#select-media-button');
           this.selectArticleFromTable = $('#avail-lecture');
           this.table = document.getElementById("avail-lecture");
       }
