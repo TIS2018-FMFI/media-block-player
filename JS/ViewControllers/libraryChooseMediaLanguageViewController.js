@@ -16,9 +16,9 @@ class LibraryChooseMediaLanguageViewController extends ViewController{
     renderHtml(html) {
         const htmlView = `
             <section id="LibraryChooseMediaLanguageViewController" class="container">
-                <div class="row row-100 m12">
+                <div class="row row-50 m12">
                     <div class="col s12">
-                        <h1 class="center">Choose media language</h1>
+                        <h1 class="center">Choose Article Language</h1>
                     </div>
                 </div>
                 <div class="row row-25 m12">
@@ -32,7 +32,6 @@ class LibraryChooseMediaLanguageViewController extends ViewController{
                 <div class="row row-50">
                     <div class="col s12 center">
                         <h6><p id="error_alert"></p></h6>
-                        <a id="choose-button" class="waves-effect waves-light btn-large disabled">choose</a>
                     </div>
                 </div>
                 <div class="row row-100">
@@ -47,7 +46,6 @@ class LibraryChooseMediaLanguageViewController extends ViewController{
 
       setupProperties() {
           this.languagePicker =  $('#select-language');
-          this.chooseButton = $('#choose-button');
       }
 
       viewDidLoad() {
@@ -56,9 +54,7 @@ class LibraryChooseMediaLanguageViewController extends ViewController{
 
       setupEventListeners() {
           this.languageValueChanged = this.languageValueChanged.bind(this);
-          this.chooseButtonClicked = this.chooseButtonClicked.bind(this);
           this.languagePicker.change(this.languageValueChanged);
-          this.chooseButton.on('click', this.chooseButtonClicked);
       }
 
       presentNextController() {
@@ -69,22 +65,15 @@ class LibraryChooseMediaLanguageViewController extends ViewController{
           this.navigationController.present(librarySelectMediaLanguageViewController);
       }
 
+      /// This method try to set a selected language from listchoice
+      /// and if atribute this.language is not null or empty string
+      /// then invoke method this.presentNextController().
       languageValueChanged() {
           this.language = this.languagePicker[0].options[this.languagePicker[0].selectedIndex].text;
           this.shortLanguage = this.languagePicker[0].options[this.languagePicker[0].selectedIndex].value;
-          this.setupChooseButton();
-      }
-
-      setupChooseButton() {
           if (!(this.isEmpty(this.language))) {
-              this.chooseButton.removeClass("disabled");
-          } else {
-              this.chooseButton.addClass("disabled");
+              this.presentNextController();
           }
-      }
-
-      chooseButtonClicked() {
-          this.presentNextController();
       }
 
       // Private Methods
