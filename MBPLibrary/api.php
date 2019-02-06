@@ -26,6 +26,8 @@
          exit(0);
      }
 
+header("Content-type: text/plain");
+
 include_once('db.php');
 include_once('lecture.php');
 
@@ -63,7 +65,8 @@ if(isset($_POST['action']) && !empty($_POST['action'])){
         if (!$mysqli->connect_errno) {
             if ($result = $mysqli->query($sql)){
                 while ($row = $result->fetch_assoc()) {
-                    $t = "http://".$_SERVER['SERVER_NAME'].":".$_SERVER['SERVER_PORT'].$_SERVER['REQUEST_URI'];
+                    $xx = implode("/",array_slice(explode("/",$_SERVER['HTTP_REFERER']), 0, -1));
+                    $t = $xx.$_SERVER['REQUEST_URI'];
                     $p = substr($t,0, strlen($t)-7);
 
                     $lec = new \stdClass();
