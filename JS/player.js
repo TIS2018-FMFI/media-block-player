@@ -37,16 +37,21 @@ class Player {
             this.sound = settings["audio"]
         }
 
-        if (this.playMode == "3" || this.playMode == "5" || this.playMode == "1") {
+        if (this.playMode == "3" || this.playMode == "5" || this.settings['pause'] == "99") {
             this.waitForBtn = true;
         }
+
+        if (this.settings['pause'] == "99"){
+          this.pause = 0;
+        }
+        console.log(this.settings);
     }
 
     // This method starts playing the lecture.
     play() {
         if (this.sound.playing()) {
             return;
-        }
+        };
         // play
         if (this.actualBlock < this.totalBlocks && this.actualBlock > -1) {
             // original block
@@ -74,11 +79,17 @@ class Player {
             }
 
             var timeOutTime = 500;
-            if (this.blockPlayedCount < this.blockRepeatCount) {
-                timeOutTime = this.pauseRepeat;
-            } else {
-                timeOutTime = this.pause;
+            if (!this.waitForBtn){
+              if (this.blockPlayedCount < this.blockRepeatCount) {
+                  timeOutTime = this.pauseRepeat;
+              } else {
+                  timeOutTime = this.pause;
+              }
             }
+            else {
+              timeOutTime = 10;
+            }
+
 
             tmpPlayer.sound.once('end', function() {
                 if (tmpPlayer.paused)

@@ -19,7 +19,7 @@ class LibrarySelectMediaLanguageViewController extends ViewController {
             <section id="LibrarySelectMediaLanguageViewController" class="container">
                 <div class="row row-80 m12">
                     <div class="col s12">
-                        <h1 class="center">${this.language} Article</h1>
+                        <h1 class="center">${this.language} Articles</h1>
                     </div>
                 </div>
                 <div class="row row m12">
@@ -28,8 +28,8 @@ class LibrarySelectMediaLanguageViewController extends ViewController {
                           <thead>
                             <tr>
                               <th>#</th>
-                              <th>Lecture name</th>
-                              <th>Lecture Language</th>
+                              <th>Article name</th>
+                              <th>Article Language</th>
                               <th>Difficulty</th>
                               <th>Description</th>
                               <th>Media files</th>

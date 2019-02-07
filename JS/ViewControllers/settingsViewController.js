@@ -124,7 +124,7 @@ class SettingsViewController extends ViewController {
                         </div>
                         <div class="row">
                           <div class="col s4">
-                            <p>Paralel translation</p>
+                            <p>Parallel translation</p>
                           </div>
                           <div class="col s8">
                             <p>
@@ -189,13 +189,6 @@ class SettingsViewController extends ViewController {
             if (this.lectureData['playMode'] == '3' || this.lectureData['playMode'] == '5') {
                 this.pause.prop('disabled', true);
                 this.pauseRepeat.prop('disabled', true);
-            }
-            if (this.lectureData['playMode'] == '1') {
-                this.pause.prop('disabled', true);
-                this.pauseRepeat.prop('disabled', true);
-                this.repeat.prop('disabled', true);
-                this.paralel.prop('checked', true);
-                this.paralel.prop('disabled', true);
             }
         }
         this.checkAvailableTranslations();
@@ -270,7 +263,7 @@ class SettingsViewController extends ViewController {
             this.script.prop('checked', false);
             this.paralel.prop('checked', true);
             this.direction.prop('checked', false);
-            this.pause.val("0");
+            this.pause.val("99");
             this.repeat.val("0");
             this.pauseRepeat.val("0");
 
@@ -278,13 +271,8 @@ class SettingsViewController extends ViewController {
             this.repeat.next("label").addClass('active');
             this.pauseRepeat.next("label").addClass('active');
 
-            this.pause.prop('disabled', true);
-            this.pauseRepeat.prop('disabled', true);
-            this.repeat.prop('disabled', true);
-            this.script.prop('checked', false);
-            this.paralel.prop('checked', true);
-            this.script.prop('disabled', true);
-            this.paralel.prop('disabled', true);
+            this.pause.prop('disabled', false);
+            this.pauseRepeat.prop('disabled', false);
 
         } else if (val == "2") {
             this.script.prop('checked', true);
@@ -300,9 +288,6 @@ class SettingsViewController extends ViewController {
 
             this.pause.prop('disabled', false);
             this.pauseRepeat.prop('disabled', false);
-            this.script.prop('disabled', false);
-            this.paralel.prop('disabled', false);
-            this.repeat.prop('disabled', false);
 
         } else if (val == "3") {
             this.script.prop('checked', true);
@@ -318,9 +303,6 @@ class SettingsViewController extends ViewController {
 
             this.pause.prop('disabled', true);
             this.pauseRepeat.prop('disabled', true);
-            this.script.prop('disabled', false);
-            this.paralel.prop('disabled', false);
-            this.repeat.prop('disabled', false);
         } else if (val == "4") {
             this.script.prop('checked', true);
             this.paralel.prop('checked', true);
@@ -335,9 +317,6 @@ class SettingsViewController extends ViewController {
 
             this.pause.prop('disabled', false);
             this.pauseRepeat.prop('disabled', false);
-            this.script.prop('disabled', false);
-            this.paralel.prop('disabled', false);
-            this.repeat.prop('disabled', false);
         } else if (val == "5") {
             this.script.prop('checked', false);
             this.paralel.prop('checked', true);
@@ -352,9 +331,6 @@ class SettingsViewController extends ViewController {
 
             this.pause.prop('disabled', true);
             this.pauseRepeat.prop('disabled', true);
-            this.script.prop('disabled', false);
-            this.paralel.prop('disabled', false);
-            this.repeat.prop('disabled', false);
         } else {
             this.pause.val("");
             this.repeat.val("");
@@ -366,10 +342,10 @@ class SettingsViewController extends ViewController {
 
             this.script.prop('disabled', false);
             this.paralel.prop('disabled', false);
-            this.direction.prop('disabled', false);
-            this.repeat.prop('disabled', false);
             this.pause.prop('disabled', false);
             this.pauseRepeat.prop('disabled', false);
+            this.repeat.prop('disabled', false);
+            this.direction.prop('disabled', false);
         }
 
         this.checkAvailableTranslations();

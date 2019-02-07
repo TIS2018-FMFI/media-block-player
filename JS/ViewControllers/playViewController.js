@@ -15,7 +15,7 @@ class PlayViewController extends ViewController {
 
         if (this.isCheckingActive()) {
             controlBtns += `<button class="btn-large" id="play-sound-btn">`
-            if (this.settings['playMode'] == "1") {
+            if (this.settings['pause'] == "99") {
                 controlBtns += `<i class="material-icons">play_arrow</i>`;
             } else {
                 controlBtns += `<i class="material-icons">check_circle</i>`;
@@ -131,7 +131,7 @@ class PlayViewController extends ViewController {
 
     // private Methods
     isCheckingActive() {
-        if (this.settings['playMode'] == "3" || this.settings['playMode'] == "5" || this.settings['playMode'] == "1") {
+        if (this.settings['playMode'] == "3" || this.settings['playMode'] == "5" || this.settings['pause'] == "99") {
             return true;
         }
 
@@ -151,6 +151,7 @@ class PlayViewController extends ViewController {
 
     backToSettings() {
         this.player.sound.stop();
+        this.player.sound.off();
         this.player.clearAllTimeOuts();
         this.navigationController.presentLastShownController();
     }
