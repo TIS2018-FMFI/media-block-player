@@ -342,6 +342,10 @@ class SettingsViewController extends ViewController {
 
             this.script.prop('disabled', false);
             this.paralel.prop('disabled', false);
+            this.pause.prop('disabled', false);
+            this.pauseRepeat.prop('disabled', false);
+            this.repeat.prop('disabled', false);
+            this.direction.prop('disabled', false);
         }
 
         this.checkAvailableTranslations();
