@@ -365,7 +365,7 @@ if ($lectures == null) {
                     <p><a href='<?php echo $lecture_text_link ?> ' download class='btn waves-effect waves-blue blue'>Original script
                             File</a></p>
                     <p><a href='<?php echo $lecture_sync_link ?> ' download class='btn waves-effect waves-blue blue'>Sync file
-                            File</a></p>
+                            </a></p>
 
                     <?php
                     if ($lecture['trans'] != "") {
@@ -1041,7 +1041,7 @@ if ($lectures == null) {
                         </div>
                         <div class="col s6 m3">
                             <div class="container blue" style="width: 100%; margin: 1em 0">
-                                <a href="#" class="btn btn-large grey" style="width: 100%;">Placeholder</a>
+                                <a href="admin.php?mode=contributions" class="btn btn-large green" style="width: 100%;">Contributions</a>
                             </div>
                         </div>
                         <div class="col s6 m3">
@@ -1069,6 +1069,142 @@ if ($lectures == null) {
             </main>
 
             <?php
+        }
+
+        public static function admin_contributions()
+        {
+            $lectures = Lecture::get_lectures(0,999);
+
+            if ($lectures == Null) {
+                self::warning_card("No articles found");
+                return;
+            }
+
+            ?>
+            <div class="container">
+                <table class='responsive-table'>
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Article name</th>
+                        <th>Article Language</th>
+                        <th>Difficulty</th>
+                        <th>Length</th>
+                        <th>Downloads</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php
+                    foreach ($lectures as $lecture) {
+                        $modalname = hash('md5', $lecture['data']['id'] . $lecture['data']['name']);
+                        $lecture_name = $lecture['data']['name'];
+                        $lecture_id = $lecture['data']['id'];
+                        $lecture_lang = $lecture['data']['l_name'];
+                        $lecture_diff = $lecture['data']['difficulty'];
+                        $lecture_down_count = $lecture['data']['download_count'];
+
+                        echo "<tr>";
+                        echo "<td>$lecture_id</td>";
+                        echo "<td>$lecture_name</td>";
+                        echo "<td>$lecture_lang</td>";
+                        if($lecture_diff == 1) echo "<td>A</td>";
+                        elseif($lecture_diff == 2) echo "<td>B</td>";
+                        else echo "<td>C</td>";
+                        echo "<td></td>";
+                        echo "<td>$lecture_down_count x</td>";
+                        echo "<td> <button data-swal_id='swal_$modalname' data-swal_lec_id='$lecture_id' class='waves-effect waves-blue btn red swalbtn'><i class='fa fa-times'></i></button> <a class='waves-effect waves-blue btn blue modal-trigger' href='#$modalname'><i class='fa fa-search'></i></a></td>";
+                        echo "</tr>";
+                    }
+                    ?>
+                    </tbody>
+                </table>
+            </div>
+            <?php
+            foreach ($lectures as $lecture) {
+                $modalname = hash('md5', $lecture['data']['id'] . $lecture['data']['name']);
+                $lecture_desc = $lecture['data']['description'];
+                $lecture_id = $lecture['data']['id'];
+                $lecture_media_link = $lecture['data']['audio_link'];
+                $lecture_text_link = $lecture['data']['text_link'];
+                $lecture_sync_link = $lecture['data']['sync_file_link'];
+                $lecture_lang = $lecture['data']['l_name'];
+                $lecture_name = $lecture['data']['name'];
+                $contributor = User::get_user_by_id($lecture['data']['user_id']);
+
+
+                /*print "<pre>";
+                print_r($lecture);
+                print "</pre>";*/
+                ?>
+                <div class='modal' id='<?php echo $modalname ?>'>
+                    <div class='modal-content'>
+                        <div class='modal-header'>
+                            <h4><?php echo $lecture_name ?></h4>
+                            <a href='#' class='modal-close'
+                               style='position: fixed; right: 1em; top: 0.5em; font-size: 2em;'>&times;</a></div>
+
+
+                        <p><strong>Language:</strong> <?php echo $lecture_lang ?></p>
+                        <p><strong>Contributor:</strong> <a
+                                    href="profile.php?id=<?php echo $contributor['id'] ?>"><?php echo $contributor['username'] ?></a>
+                        </p>
+                        <p><strong>Description:</strong> <?php echo $lecture_desc ?></p>
+                        <hr>
+                        <h5>Download:</h5>
+                        <p><a href='<?php echo $lecture_media_link ?>' download
+                              class='btn waves-effect waves-blue blue'>Audio</a></p>
+                        <p><a href='<?php echo $lecture_text_link ?> ' download
+                              class='btn waves-effect waves-blue blue'>Original script</a></p>
+                        <p><a href='<?php echo $lecture_sync_link ?> ' download
+                              class='btn waves-effect waves-blue blue'>Sync File</a></p>
+
+                        <?php
+                        if ($lecture['trans'] != "") {
+                            foreach ($lecture['trans'] as $tran) {
+                                $lang = $tran['l_name'];
+                                $link = $tran['trans_link'];
+                                echo "\t\t\t\t<p><a href='$link' download class='btn waves-effect waves-blue blue'>Parallel translation ( $lang ) </a></p>\n";
+                            }
+                        }
+                        ?>
+
+                        <form id="download_<?php echo $modalname ?>" hidden>
+
+                            <input type="checkbox" data-url="<?php echo $lecture_media_link ?>" checked hidden/>
+                            <input type="checkbox" data-url="<?php echo $lecture_text_link ?>" checked hidden/>
+                            <input type="checkbox" data-url="<?php echo $lecture_sync_link ?>" checked hidden/>
+                            <?php
+
+                            if ($lecture['trans'] != "") {
+                                foreach ($lecture['trans'] as $tran) {
+                                    $link = $tran['trans_link'];
+                                    echo "\t\t\t\t<input type='checkbox' data-url='$link' checked hidden/>\n";
+                                }
+                            }
+                            ?>
+                        </form>
+
+                        <div class='modal-footer'>
+
+                            <div class="progress" id="progress_bar_<?php echo $modalname ?>" style="display: none">
+                                <div class="indeterminate"></div>
+                            </div>
+                            <p class="hide" id="result_<?php echo $modalname ?>"></p>
+                            <button type="submit" form="download_<?php echo $modalname ?>"
+                                    class="download_lecture btn green waves-effect"
+                                    data-lecture-id="<?php echo $lecture_id ?>"
+                                    data-lecture-name="<?php echo $lecture_name ?>"
+                                    data-lecture="<?php echo $modalname ?>">Download all
+                            </button>
+                            <a href='#' class='modal-close waves-effect waves-blue btn blue'>Close</a>
+
+                        </div>
+                    </div>
+                </div>
+
+                <?php
+            }
         }
 
 
