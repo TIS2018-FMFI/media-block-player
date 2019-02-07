@@ -137,7 +137,16 @@ class LibrarySelectMediaLanguageViewController extends ViewController {
                       description.innerHTML = this.listOfLessons[line][key];
                   }
                   else if (key == "level") {
-                      difficulty.innerHTML = this.listOfLessons[line][key];
+                      if (this.listOfLessons[line][key] == '1'){
+                        difficulty.innerHTML = "A";
+                      }
+                      else if (this.listOfLessons[line][key] == '2'){
+                        difficulty.innerHTML = "B";
+                      }
+                      else{
+                        difficulty.innerHTML = "C";
+                      }
+
                   }
                   else if (key == "audio_file_link") {
                       var pom = this.listOfLessons[line][key].split("/");
