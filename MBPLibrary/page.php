@@ -365,7 +365,7 @@ if ($lectures == null) {
                     <p><a href='<?php echo $lecture_text_link ?> ' download class='btn waves-effect waves-blue blue'>Original script
                             File</a></p>
                     <p><a href='<?php echo $lecture_sync_link ?> ' download class='btn waves-effect waves-blue blue'>Sync file
-                            File</a></p>
+                            </a></p>
 
                     <?php
                     if ($lecture['trans'] != "") {
