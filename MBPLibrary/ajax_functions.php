@@ -8,6 +8,8 @@ include_once('lecture.php');
 
 global $mysqli;
 
+header("Content-type: text/plain");
+
 if(isset($_POST['action']) && !empty($_POST['action'])){
 
     if(strcmp($_POST['action'], 'increase_down_count') === 0){

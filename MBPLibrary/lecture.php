@@ -179,11 +179,9 @@ class Lecture{
         $lec_desc = $data['lecture_description'];
         $lec_diff = $data['lecture_diff'];
         $lec_lang = $data['lecture_lang'];
-        $lec_txt = 'Data/Scripts/'.$lec_tit.'.txt';
-        $lec_syn = 'Data/Syncs/'.$lec_tit.'.mbpsf';
 
         $sql = "INSERT INTO mbp_lectures (name, description, difficulty, language_id, user_id, audio_link, text_link, sync_file_link)
-                VALUES ('$lec_tit', '$lec_desc', '$lec_diff', '$lec_lang', '$user_id', ' ', '$lec_txt', '$lec_syn')";
+                VALUES ('$lec_tit', '$lec_desc', '$lec_diff', '$lec_lang', '$user_id', ' ', ' ', '')";
 
         $new_id = 0;
 
@@ -207,21 +205,28 @@ class Lecture{
     public static function save_lecture_files($files, $lecture_name, $lec_id){
 
         if(self::save_one_file($files['lecture_media'], "Media", $lecture_name)){
-            $fileType = strtolower(pathinfo($files['lecture_media']['name'],PATHINFO_EXTENSION));
-            $media_f = 'Data/Media/'.$lecture_name.'.'.$fileType;
+            $media_f = 'Data/Media/'.$files['lecture_media']['name'];
             self::update_lecture_media_file($media_f, $lec_id);
         }
         else{
-          $_SESION['msg'] = "Error while uploading files";
-          $_SESION['msg_type'] = "ERR";
+            $_SESION['msg'] = "Error while uploading files";
+            $_SESION['msg_type'] = "ERR";
         };
-        if(!self::save_one_file($files['lecture_script'], "Scripts", $lecture_name)){
-          $_SESION['msg'] = "Error while uploading files";
-          $_SESION['msg_type'] = "ERR";
+        if(self::save_one_file($files['lecture_script'], "Scripts", $lecture_name)) {
+            $f = 'Data/Scripts/'.$files['lecture_script']['name'];
+            self::update_lecture_script_file($f, $lec_id);
+        }
+        else{
+            $_SESION['msg'] = "Error while uploading files";
+            $_SESION['msg_type'] = "ERR";
         };
-        if(!self::save_one_file($files['lecture_sync'], "Syncs", $lecture_name)){
-          $_SESION['msg'] = "Error while uploading files";
-          $_SESION['msg_type'] = "ERR";
+        if(self::save_one_file($files['lecture_sync'], "Syncs", $lecture_name)) {
+            $f = 'Data/Syncs/'.$files['lecture_sync']['name'];
+            self::update_lecture_sync_file($f, $lec_id);
+        }
+        else{
+            $_SESION['msg'] = "Error while uploading files";
+            $_SESION['msg_type'] = "ERR";
         };
 
         return true;
@@ -240,8 +245,7 @@ class Lecture{
 
         for($i = 1; $i <= $trans_count; $i++){
             self::save_one_file($files['lecture_trans_'.$i], 'Translations', $lecture_name, $i);
-            $fileType = strtolower(pathinfo($files['lecture_trans_'.$i]['name'],PATHINFO_EXTENSION));
-            $f_name = 'Data/Translations/'.$lecture_name.$i.'.'.$fileType;
+            $f_name = 'Data/Translations/'.$files['lecture_trans_'.$i]['name'];
 
             self::insert_translation($f_name, $lecture_name, $lec_id, $trans_data['trans_lang_'.$i]);
         }
@@ -290,6 +294,30 @@ class Lecture{
         return false;
     }
 
+    private static function update_lecture_script_file($file, $lec_id){
+        global $mysqli;
+
+        $sql = "UPDATE mbp_lectures SET text_link='$file' WHERE id = '$lec_id'";
+        if (!$mysqli->connect_errno) {
+            if ($result = $mysqli->query($sql)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static function update_lecture_sync_file($file, $lec_id){
+        global $mysqli;
+
+        $sql = "UPDATE mbp_lectures SET sync_file_link='$file' WHERE id = '$lec_id'";
+        if (!$mysqli->connect_errno) {
+            if ($result = $mysqli->query($sql)){
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * @param Object $file - concrete file from $_FILES variable
      * @param String $module - name of module that file belongs to one from ['Media', 'Translations', 'Syncs', 'Scripts']
@@ -302,12 +330,8 @@ class Lecture{
     private static function save_one_file($file, $module, $lecture_name, $salt = 0){
 
         $target_dir = "Data/".$module."/";
-        $up_file = $target_dir . $file['name'];
-        $fileType = strtolower(pathinfo($up_file,PATHINFO_EXTENSION));
-        if (strcmp($module, 'Translations') == 0){
-            $new_file = $target_dir . $lecture_name .$salt.".". $fileType;
-        }
-        else $new_file = $target_dir . $lecture_name .".". $fileType;
+
+        $new_file = $target_dir . $file['name'];
 
         if(!move_uploaded_file($file["tmp_name"], $new_file)) return false;
         return true;

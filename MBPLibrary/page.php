@@ -134,7 +134,7 @@ public static function page_footer()
         </div>
         <div class="footer-copyright">
             <div class="container">
-                &copy; Created by 'Prvá skupina v zozname' as a school project, 2019
+                version 1.2.0 | &copy; Created by 'Prvá skupina v zozname' as a school project, 2019
             </div>
         </div>
     </footer>
