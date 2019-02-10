@@ -6,7 +6,11 @@
 
  /* CUSTOM */
 
- #error_alert, #notSelected{
+ #version {
+   color: #928a8a;
+ }
+
+ #error_alert, #notSelected {
    color: blue;
    font-weight: bold;
  }

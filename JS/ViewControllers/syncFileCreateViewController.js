@@ -33,7 +33,7 @@ class SyncFileCreateViewController extends ViewController {
                     <a id="play-actual-block-button" class="btn"><i class="material-icons right">replay</i>Play actual block</a>
                 </div>
                 <div class="row row-50 center">
-                    <a id="skip-block-button" class="btn m-lr-10">Skip block</a>
+                    <a id="skip-block-button" class="btn m-lr-10">Skip time</a>
                     <a id="next-block-button" class="btn m-lr-10">NEXT BLOCK</a>
                 </div>
                 <div class="row row-100">
@@ -127,12 +127,6 @@ class SyncFileCreateViewController extends ViewController {
 
     // Private Methods
 
-    audioReachedEnd() {
-        const duration = this.sound.duration(); // last seek
-        this.blocksEndTimes.push( Math.round( duration * 100 ) / 100 );
-        this.fileCreatingFinished();
-    }
-
     playPauseButtonClicked() {
         if (this.sound.playing()) {
             this.sound.pause();
@@ -167,8 +161,7 @@ class SyncFileCreateViewController extends ViewController {
     }
 
     skipBlockButtonClicked() {
-        this.actualSeek = this.sound.seek();
-        this.blocksEndTimes.push( Math.round( this.sound.seek() * 100 ) / 100 );
+        this.addActualSeekBlock();
         this.skipBlock.push( Math.round( this.sound.seek() * 100 ) / 100 );
     }
 
@@ -176,14 +169,24 @@ class SyncFileCreateViewController extends ViewController {
         if (this.creatingDone) {
             this.presentNextController();
         } else if (this.textBlockIndex === this.blocks.length - 1) {
+            this.addActualSeekBlock();
             this.fileCreatingFinished();
         } else {
-            this.actualSeek = this.sound.seek();
-            this.blocksEndTimes.push( Math.round( this.sound.seek() * 100 ) / 100 );
-
+            this.addActualSeekBlock();
             this.textBlockIndex++;
             this.actualBlockText.text( this.blocks[this.textBlockIndex] );
         }
+    }
+
+    addActualSeekBlock() {
+        this.actualSeek = this.sound.seek();
+        this.blocksEndTimes.push( Math.round( this.sound.seek() * 100 ) / 100 );
+    }
+
+    audioReachedEnd() {
+        const duration = this.sound.duration(); // last seek
+        this.blocksEndTimes.push( Math.round( duration * 100 ) / 100 );
+        this.fileCreatingFinished();
     }
 
     fileCreatingFinished() {
