@@ -152,7 +152,7 @@ class Lecture{
 
         $res = array();
 
-        $sql = "SELECT t.id, t.name, t.trans_link, l.name as l_name, l.abbr FROM mbp_translations as t join mbp_languages as l on t.language_id = l.id where lecture_id = $lecture_id";
+        $sql = "SELECT t.id, t.name, t.trans_link, t.contributor_id, l.name as l_name, l.abbr FROM mbp_translations as t join mbp_languages as l on t.language_id = l.id where lecture_id = $lecture_id";
         if(!$mysqli->connect_errno){
             $result = $mysqli->query($sql);
 
@@ -181,7 +181,7 @@ class Lecture{
         $lec_lang = $data['lecture_lang'];
 
         $sql = "INSERT INTO mbp_lectures (name, description, difficulty, language_id, user_id, audio_link, text_link, sync_file_link)
-                VALUES ('$lec_tit', '$lec_desc', '$lec_diff', '$lec_lang', '$user_id', ' ', ' ', '')";
+                VALUES ('$lec_tit', '$lec_desc', '$lec_diff', '$lec_lang', '$user_id', '', '', '')";
 
         $new_id = 0;
 
@@ -212,7 +212,7 @@ class Lecture{
             $_SESION['msg'] = "Error while uploading files";
             $_SESION['msg_type'] = "ERR";
         };
-        if(self::save_one_file($files['lecture_script'], "Scripts", $lecture_name)) {
+        if(isset($files['lecture_script']) and self::save_one_file($files['lecture_script'], "Scripts", $lecture_name)) {
             $f = 'Data/Scripts/'.$files['lecture_script']['name'];
             self::update_lecture_script_file($f, $lec_id);
         }
@@ -220,7 +220,7 @@ class Lecture{
             $_SESION['msg'] = "Error while uploading files";
             $_SESION['msg_type'] = "ERR";
         };
-        if(self::save_one_file($files['lecture_sync'], "Syncs", $lecture_name)) {
+        if(isset($files['lecture_sync']) and self::save_one_file($files['lecture_sync'], "Syncs", $lecture_name)) {
             $f = 'Data/Syncs/'.$files['lecture_sync']['name'];
             self::update_lecture_sync_file($f, $lec_id);
         }
@@ -244,10 +244,12 @@ class Lecture{
         $trans_count = $trans_data['trans_count'];
 
         for($i = 1; $i <= $trans_count; $i++){
-            self::save_one_file($files['lecture_trans_'.$i], 'Translations', $lecture_name, $i);
-            $f_name = 'Data/Translations/'.$files['lecture_trans_'.$i]['name'];
+            if($files['lecture_trans_'.$i]['size'] != 0){
+                self::save_one_file($files['lecture_trans_'.$i], 'Translations', $lecture_name, $i);
+                $f_name = 'Data/Translations/'.$files['lecture_trans_'.$i]['name'];
 
-            self::insert_translation($f_name, $lecture_name, $lec_id, $trans_data['trans_lang_'.$i]);
+                self::insert_translation($f_name, $lecture_name, $lec_id, $trans_data['trans_lang_'.$i]);
+            }
         }
 
     }
@@ -265,8 +267,9 @@ class Lecture{
         global $mysqli;
 
         $trans_name = $lecture_name.'_'.$lang_id;
+        $uid = $_SESSION['id'];
 
-        $sql = "INSERT INTO mbp_translations (name, trans_link, lecture_id, language_id) VALUES ('$lecture_name','$file','$lec_id','$lang_id')";
+        $sql = "INSERT INTO mbp_translations (name, trans_link, lecture_id, language_id, contributor_id) VALUES ('$lecture_name','$file','$lec_id','$lang_id', '$uid')";
         if (!$mysqli->connect_errno) {
             if ($result = $mysqli->query($sql)){
                 return true;
@@ -297,7 +300,7 @@ class Lecture{
     private static function update_lecture_script_file($file, $lec_id){
         global $mysqli;
 
-        $sql = "UPDATE mbp_lectures SET text_link='$file' WHERE id = '$lec_id'";
+        $sql = "UPDATE mbp_lectures SET text_link='$file', text_contributor_id='{$_SESSION['id']}' WHERE id = '$lec_id'";
         if (!$mysqli->connect_errno) {
             if ($result = $mysqli->query($sql)){
                 return true;
@@ -309,7 +312,7 @@ class Lecture{
     private static function update_lecture_sync_file($file, $lec_id){
         global $mysqli;
 
-        $sql = "UPDATE mbp_lectures SET sync_file_link='$file' WHERE id = '$lec_id'";
+        $sql = "UPDATE mbp_lectures SET sync_file_link='$file', sync_contributor_id='{$_SESSION['id']}' WHERE id = '$lec_id'";
         if (!$mysqli->connect_errno) {
             if ($result = $mysqli->query($sql)){
                 return true;
@@ -374,6 +377,29 @@ class Lecture{
         return NULL;
     }
 
+    public static function get_user_favorite_lectures($user_id){
+        global $mysqli;
+
+        $sql = "SELECT lecture_id FROM mbp_user_saved_lectures WHERE user_id = '$user_id'";
+        if (!$mysqli->connect_errno) {
+            $res = array();
+            if ($result = $mysqli->query($sql)){
+                while($row = $result->fetch_assoc()){
+                    $lid = $row['lecture_id'];
+                    $sql2 = "SELECT lec.*, l.name as l_name, l.abbr FROM mbp_lectures as lec join mbp_languages as l on lec.language_id = l.id WHERE lec.id = $lid AND lec.active = 1";
+                    if ($result2 = $mysqli->query($sql2)){
+                        while($row2 = $result2->fetch_assoc()){
+                            array_push($res, array('data'=>$row2, 'trans'=> self::get_lecture_translations($row2['id'])));
+                        }
+                    }
+                }
+                return $res;
+            }
+        }
+
+        return NULL;
+    }
+
     public static function delete_lecture($lecture_id){
         global $mysqli;
 
@@ -405,6 +431,97 @@ class Lecture{
                 }
             }
         }
+
+        return true;
+    }
+
+    public static function is_starred($lid, $uid)
+    {
+        global $mysqli;
+
+        $sql = "SELECT * FROM mbp_user_saved_lectures WHERE lecture_id ='$lid' AND user_id = '$uid'";
+        if (!$mysqli->connect_errno) {
+            $result = $mysqli->query($sql);
+            $count = mysqli_num_rows($result);
+            if($count > 0){
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
+
+    public static function get_lecture_by_id($lid)
+    {
+        global $mysqli;
+
+        $sql = "SELECT lec.*, l.name as l_name, l.abbr FROM mbp_lectures as lec join mbp_languages as l on lec.language_id = l.id WHERE lec.id = '$lid' AND lec.active = 1";
+        if (!$mysqli->connect_errno) {
+            $res = array();
+            if ($result = $mysqli->query($sql)){
+                while($row = $result->fetch_assoc()){
+                    array_push($res, array('data'=>$row, 'trans'=> self::get_lecture_translations($row['id'])));
+                }
+                return $res;
+            }
+        }
+        return NULL;
+    }
+
+    public static function update_lecture($data)
+    {
+        global $mysqli;
+
+        $lec_tit = $data['lecture_title'];
+        $lec_desc = $data['lecture_description'];
+        $lec_diff = $data['lecture_diff'];
+        $lec_lang = $data['lecture_lang'];
+        $lid = $data['lid'];
+
+        $sql = "UPDATE mbp_lectures SET name = '$lec_tit', description = '$lec_desc', difficulty = '$lec_diff', language_id = '$lec_lang' WHERE id = '$lid'";
+
+        if (!$mysqli->connect_errno) {
+            if ($result = $mysqli->query($sql)){
+                return;
+            }
+        }
+
+    }
+
+    public static function update_one_file($file, $module, $old_file){
+        $target_dir = "Data/".$module."/";
+
+        $new_file = $target_dir . $file['name'];
+
+        if(file_exists($old_file)){
+            unlink($old_file);
+        }
+
+        if(!move_uploaded_file($file["tmp_name"], $new_file)) return false;
+
+        return true;
+    }
+
+    public static function update_lecture_files($files, $lid){
+
+        $lec = self::get_lecture_by_id($lid);
+
+        if(isset($files['lecture_script']) and self::update_one_file($files['lecture_script'], "Scripts", $lec['text_link'])) {
+            $f = 'Data/Scripts/'.$files['lecture_script']['name'];
+            self::update_lecture_script_file($f, $lid);
+        }
+        else{
+            $_SESION['msg'] = "Error while uploading files";
+            $_SESION['msg_type'] = "ERR";
+        };
+        if(isset($files['lecture_sync']) and self::save_one_file($files['lecture_sync'], "Syncs", $lec['sync_file_link'])) {
+            $f = 'Data/Syncs/'.$files['lecture_sync']['name'];
+            self::update_lecture_sync_file($f, $lid);
+        }
+        else{
+            $_SESION['msg'] = "Error while uploading files";
+            $_SESION['msg_type'] = "ERR";
+        };
 
         return true;
     }

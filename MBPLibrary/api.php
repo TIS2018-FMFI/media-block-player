@@ -41,7 +41,10 @@ if(isset($_POST['action']) && !empty($_POST['action'])){
      */
     if(strcmp($_POST['action'], "get-avail-lang") === 0){
 
-        $sql = "SELECT DISTINCT lang.id, lang.abbr, lang.name FROM mbp_lectures as l join mbp_languages as lang on lang.id = l.language_id WHERE l.active = 1";
+        $sql = "SELECT DISTINCT lang.id, lang.abbr, lang.name FROM mbp_lectures as l join mbp_languages as lang on lang.id = l.language_id
+              WHERE l.active = 1
+              AND l.text_link != ''
+              AND l.sync_file_link != ''";
         $res = array();
         if (!$mysqli->connect_errno) {
             if ($result = $mysqli->query($sql)){
@@ -60,7 +63,11 @@ if(isset($_POST['action']) && !empty($_POST['action'])){
      */
     if(strcmp($_POST['action'], "get-lectures-in-lang") === 0){
         $lang = $_POST['primaryLang'];
-        $sql = "SELECT lec.*, lang.abbr FROM mbp_lectures as lec JOIN mbp_languages as lang ON lec.language_id = lang.id WHERE abbr = '$lang' AND lec.active = 1";
+        $sql = "SELECT lec.*, lang.abbr FROM mbp_lectures as lec JOIN mbp_languages as lang ON lec.language_id = lang.id 
+                WHERE abbr = '$lang' 
+                AND lec.active = 1 
+                AND lec.text_link != '' 
+                AND lec.sync_file_link != ''";
         $res = array();
         if (!$mysqli->connect_errno) {
             if ($result = $mysqli->query($sql)){
