@@ -40,6 +40,7 @@ Page::page_footer();
 <script>
     $(document).ready(function(){
         $('.modal').modal();
+        $('select').formSelect();
     });
 
     $("[data-lecture]").click(function () {

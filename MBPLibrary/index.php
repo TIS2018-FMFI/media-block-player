@@ -48,6 +48,14 @@ Page::page_footer();
     $(document).ready(function () {
         $('.modal').modal();
         $('select').formSelect();
+
+        $('.star_btn').click(function () {
+            let lid = $(this).data('lectureid');
+            let uid = $(this).data('userid');
+            console.log(lid);
+
+            star_lecture(lid, uid);
+        })
     });
 
 
@@ -129,6 +137,29 @@ Page::page_footer();
             dataType: 'json',
             success: function (data) {
                 //console.log(data);
+            }
+        })
+    }
+
+    function star_lecture($lec_id, $user_id) {
+        console.log($lec_id+" - "+$user_id);
+        $.ajax({
+            type: 'POST',
+            url: "./ajax_functions.php",
+            data:{
+                action: "star_lecture",
+                lec_id: $lec_id,
+                user_id: $user_id,
+            },
+            dataType: 'json',
+            success: function (data) {
+                if(data.mode == "INS"){
+                    $('#star_icon_'+$lec_id).html("star");
+                }
+                else if(data.mode == "DEL"){
+                    $('#star_icon_'+$lec_id).html("star_border");
+                }
+                console.log(data);
             }
         })
     }

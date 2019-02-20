@@ -35,11 +35,38 @@ if(isset($_POST['action']) && !empty($_POST['action'])){
 
     }
 
-    echo json_encode(array('status'=>'NotOK'));
+    if(strcmp($_POST['action'], 'star_lecture') === 0){
+        $lid = $_POST['lec_id'];
+        $uid = $_POST['user_id'];
+
+        $sql = "SELECT * FROM mbp_user_saved_lectures WHERE lecture_id ='$lid' AND user_id = '$uid'";
+        if (!$mysqli->connect_errno) {
+            $result = $mysqli->query($sql);
+            $row = mysqli_fetch_array($result,MYSQLI_ASSOC);
+            $count = mysqli_num_rows($result);
+            if($count > 0){
+                $delID = $row['id'];
+                $sql2 = "DELETE FROM mbp_user_saved_lectures WHERE id ='$delID'";
+                $mysqli->query($sql2);
+                echo json_encode(array('status' => 'OK', 'mode' => 'DEL'));
+                exit();
+            }
+            $sql3 = "INSERT INTO mbp_user_saved_lectures (user_id, lecture_id) VALUES ('$uid','$lid')";
+            if ($result = $mysqli->query($sql3)){
+                echo json_encode(array('status' => 'OK', 'mode' => 'INS'));
+                exit();
+            }
+        }
+
+        echo json_encode(array('status' => 'NotOK-3'));
+        exit();
+    }
+
+    echo json_encode(array('status'=>'NotOK-2'));
     exit();
 }
 
-echo json_encode(array('status'=>'NotNotOK'));
+echo json_encode(array('status'=>'NotOK-1'));
 exit();
 
 ?>

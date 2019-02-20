@@ -50,19 +50,7 @@ function resize_image($file, $w, $h, $crop=FALSE) {
  * if that happens function returns false
  */
 function check_files($files, $trans_count){
-
     if($files['lecture_media']['size'] == 0 || $files['lecture_media']['size'] >= 36700160) return false;
-
-    if($files['lecture_script']['size'] == 0) return false;
-
-    if($files['lecture_sync']['size'] == 0) return false;
-
-    if ($trans_count == 0) return true;
-
-    for($i = 1; $i <= $trans_count; $i++){
-        if($files['lecture_trans_'.$i]['size'] == 0) return false;
-    }
-
     return true;
 }
 
