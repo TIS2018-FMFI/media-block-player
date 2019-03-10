@@ -178,13 +178,12 @@ if (isset($_GET['page'])) $start_from = ($_GET['page'] - 1) * $page_entries;
 
 $avail_langs = Lecture::get_avail_langs();
 
-if(isset($_POST['filter_sent'])){
+if (isset($_POST['filter_sent'])) {
     $_SESSION['is_filtered'] = true;
     $_SESSION['filter_language'] = $_POST['filter_language'];
     $_SESSION['filter_diff'] = $_POST['filter_diff'];
     $_SESSION['filter_order'] = $_POST['filter_order'];
-}
-elseif(isset($_POST['filter_reset']) || !isset($_GET['page'])){
+} elseif (isset($_POST['filter_reset']) || !isset($_GET['page'])) {
     unset($_SESSION['is_filtered']);
     unset($_SESSION['filter_language']);
     unset($_SESSION['filter_diff']);
@@ -211,21 +210,39 @@ elseif(isset($_POST['filter_reset']) || !isset($_GET['page'])){
             <div class="input-field col s6 m3">
                 <select id="filter_diff" name="filter_diff" required>
                     <option selected value="Def">All</option>
-                    <option value="1" <?php if (isset($_SESSION['filter_diff']) && $_SESSION['filter_diff'] == 1) echo "selected" ?>>A</option>
-                    <option value="2" <?php if (isset($_SESSION['filter_diff']) && $_SESSION['filter_diff'] == 2) echo "selected" ?>>B</option>
-                    <option value="3" <?php if (isset($_SESSION['filter_diff']) && $_SESSION['filter_diff'] == 3) echo "selected" ?>>C</option>
+                    <option value="1" <?php if (isset($_SESSION['filter_diff']) && $_SESSION['filter_diff'] == 1) echo "selected" ?>>
+                        A
+                    </option>
+                    <option value="2" <?php if (isset($_SESSION['filter_diff']) && $_SESSION['filter_diff'] == 2) echo "selected" ?>>
+                        B
+                    </option>
+                    <option value="3" <?php if (isset($_SESSION['filter_diff']) && $_SESSION['filter_diff'] == 3) echo "selected" ?>>
+                        C
+                    </option>
                 </select>
                 <label>Difficulty</label>
             </div>
             <div class="input-field col s6 m3">
                 <select id="filter_order" name="filter_order" required>
                     <option selected value="Def">Default</option>
-                    <option value="1" <?php if (isset($_SESSION['filter_order']) && $_SESSION['filter_order'] == 1) echo "selected" ?>>(A-Z)</option>
-                    <option value="2" <?php if (isset($_SESSION['filter_order']) && $_SESSION['filter_order'] == 2) echo "selected" ?>>(Z-A)</option>
-                    <option value="3" <?php if (isset($_SESSION['filter_order']) && $_SESSION['filter_order'] == 3) echo "selected" ?>>Downloads(Asc)</option>
-                    <option value="4" <?php if (isset($_SESSION['filter_order']) && $_SESSION['filter_order'] == 4) echo "selected" ?>>Downloads(Desc)</option>
-                    <option value="5" <?php if (isset($_SESSION['filter_order']) && $_SESSION['filter_order'] == 5) echo "selected" ?>>Date(Oldest)</option>
-                    <option value="6" <?php if (isset($_SESSION['filter_order']) && $_SESSION['filter_order'] == 6) echo "selected" ?>>Date(Newest)</option>
+                    <option value="1" <?php if (isset($_SESSION['filter_order']) && $_SESSION['filter_order'] == 1) echo "selected" ?>>
+                        (A-Z)
+                    </option>
+                    <option value="2" <?php if (isset($_SESSION['filter_order']) && $_SESSION['filter_order'] == 2) echo "selected" ?>>
+                        (Z-A)
+                    </option>
+                    <option value="3" <?php if (isset($_SESSION['filter_order']) && $_SESSION['filter_order'] == 3) echo "selected" ?>>
+                        Downloads(Asc)
+                    </option>
+                    <option value="4" <?php if (isset($_SESSION['filter_order']) && $_SESSION['filter_order'] == 4) echo "selected" ?>>
+                        Downloads(Desc)
+                    </option>
+                    <option value="5" <?php if (isset($_SESSION['filter_order']) && $_SESSION['filter_order'] == 5) echo "selected" ?>>
+                        Date(Oldest)
+                    </option>
+                    <option value="6" <?php if (isset($_SESSION['filter_order']) && $_SESSION['filter_order'] == 6) echo "selected" ?>>
+                        Date(Newest)
+                    </option>
                 </select>
                 <label>Order By</label>
             </div>
@@ -288,8 +305,8 @@ if ($lectures == null) {
             echo "<td>$lecture_id</td>";
             echo "<td>$lecture_name</td>";
             echo "<td>$lecture_lang</td>";
-            if($lecture_diff == 1) echo "<td>A</td>";
-            elseif($lecture_diff == 2) echo "<td>B</td>";
+            if ($lecture_diff == 1) echo "<td>A</td>";
+            elseif ($lecture_diff == 2) echo "<td>B</td>";
             else echo "<td>C</td>";
             echo "<td></td>";
             echo "<td>$lecture_down_count x</td>";
@@ -300,15 +317,15 @@ if ($lectures == null) {
 
 
         echo "</tbody></table><ul class='pagination'>";
-        if ( !isset($_GET['page']) || $_GET['page'] == 1) echo "<li class='disabled'><a href='#!'><i class='material-icons'>chevron_left</i></a></li>";
-        else echo "<li class='waves-effect'><a href='?page=".($_GET['page']-1)."'><i class='material-icons'>chevron_left</i></a></li>";
+        if (!isset($_GET['page']) || $_GET['page'] == 1) echo "<li class='disabled'><a href='#!'><i class='material-icons'>chevron_left</i></a></li>";
+        else echo "<li class='waves-effect'><a href='?page=" . ($_GET['page'] - 1) . "'><i class='material-icons'>chevron_left</i></a></li>";
         for ($i = 1; $i < ($lectures_count / $page_entries) + 1; $i++) {
             if ((isset($_GET['page']) && $i == $_GET['page']) || (!isset($_GET['page']) && $i == 1)) echo "<li class='active blue'><a href='?page=$i'>$i</a></li>";
             else echo "<li class='waves-effect'><a href='?page=$i'>$i</a></li>";
         }
         if ((isset($_GET['page']) && $_GET['page'] == ($lectures_count / $page_entries)) || (!isset($_GET['page']) && ($lectures_count / $page_entries) <= 1)) echo "<li class='disabled'><a href='#!'><i class='material-icons'>chevron_right</i></a></li>";
-        elseif(!isset($_GET['page']) && ($lectures_count / $page_entries) > 1) echo "<li class='waves-effect'><a href='?page=2'><i class='material-icons'>chevron_right</i></a></li>";
-        else echo "<li class='waves-effect'><a href='?page=".($_GET['page']+1)."'><i class='material-icons'>chevron_right</i></a></li>";
+        elseif (!isset($_GET['page']) && ($lectures_count / $page_entries) > 1) echo "<li class='waves-effect'><a href='?page=2'><i class='material-icons'>chevron_right</i></a></li>";
+        else echo "<li class='waves-effect'><a href='?page=" . ($_GET['page'] + 1) . "'><i class='material-icons'>chevron_right</i></a></li>";
         echo "</ul>";
         echo "</div>";
 
@@ -323,7 +340,7 @@ if ($lectures == null) {
             $lecture_name = $lecture['data']['name'];
             $contributor = User::get_user_by_id($lecture['data']['user_id']);
 
-            if(isset($_SESSION['id'])){
+            if (isset($_SESSION['id'])) {
                 $is_starred = Lecture::is_starred($lecture_id, $_SESSION['id']);
             }
 
@@ -336,12 +353,18 @@ if ($lectures == null) {
                 <div class='modal-content'>
                     <div class='modal-header'>
                         <h4><?php echo $lecture_name ?></h4>
-                        <?php if(isset($_SESSION['id'])){?>
-                            <?php if($_SESSION['id'] != $contributor['id']){ ?><a href="#!" class='star_btn' data-lectureid="<?php echo $lecture_id?>" data-userid="<?php echo $_SESSION['id']?>"
-                                                                                  style='position: fixed; right: 5em; top: 0.5em; font-size: 2em;'><i class="material-icons" id="star_icon_<?php echo $lecture_id?>"><?php if($is_starred) echo "star" ?><?php if(!$is_starred) echo "star_border"?></i></a><?php } ?>
+                        <?php if (isset($_SESSION['id'])) { ?>
+                            <?php if ($_SESSION['id'] != $contributor['id']) { ?><a href="#!" class='star_btn'
+                                                                                    data-lectureid="<?php echo $lecture_id ?>"
+                                                                                    data-userid="<?php echo $_SESSION['id'] ?>"
+                                                                                    style='position: fixed; right: 5em; top: 0.5em; font-size: 2em;'>
+                                <i class="material-icons"
+                                   id="star_icon_<?php echo $lecture_id ?>"><?php if ($is_starred) echo "star" ?><?php if (!$is_starred) echo "star_border" ?></i>
+                                </a><?php } ?>
                             <a href='lecture_edit.php?lid=<?php echo $lecture_id ?>' class=''
-                               style='position: fixed; right: 3em; top: 0.5em; font-size: 2em;'><i class="material-icons">edit</i></a>
-                        <?php }?>
+                               style='position: fixed; right: 3em; top: 0.5em; font-size: 2em;'><i
+                                        class="material-icons">edit</i></a>
+                        <?php } ?>
                         <a href='#' class='modal-close'
                            style='position: fixed; right: 1em; top: 0.5em; font-size: 2em;'>&times;</a></div>
 
@@ -352,16 +375,25 @@ if ($lectures == null) {
                     <p><strong>Description:</strong> <?php echo $lecture_desc ?></p>
                     <hr>
                     <h5>Downloads</h5>
-                    <?php if(file_exists($lecture_media_link)){ ?><p><a href='<?php echo $lecture_media_link ?>' download class='btn waves-effect waves-blue blue'>Audio File</a></p><?php }?>
-                    <?php if(file_exists($lecture_text_link)){ ?><p><a href='<?php echo $lecture_text_link ?> ' download class='btn waves-effect waves-blue blue'>Original script File</a></p><?php }?>
-                    <?php if(file_exists($lecture_sync_link)){ ?><p><a href='<?php echo $lecture_sync_link ?> ' download class='btn waves-effect waves-blue blue'>Sync file</a></p><?php } ?>
+                    <?php if (file_exists($lecture_media_link)) { ?><p><a href='<?php echo $lecture_media_link ?>'
+                                                                          download
+                                                                          class='btn waves-effect waves-blue blue'>Audio
+                            File</a></p><?php } ?>
+                    <?php if (file_exists($lecture_text_link)) { ?><p><a href='<?php echo $lecture_text_link ?> '
+                                                                         download
+                                                                         class='btn waves-effect waves-blue blue'>Original
+                            script File</a></p><?php } ?>
+                    <?php if (file_exists($lecture_sync_link)) { ?><p><a href='<?php echo $lecture_sync_link ?> '
+                                                                         download
+                                                                         class='btn waves-effect waves-blue blue'>Sync
+                            file</a></p><?php } ?>
 
                     <?php
                     if ($lecture['trans'] != "") {
                         foreach ($lecture['trans'] as $tran) {
                             $lang = $tran['l_name'];
                             $link = $tran['trans_link'];
-                            if(file_exists($lecture_media_link)){
+                            if (file_exists($lecture_media_link)) {
                                 echo "\t\t\t\t<p><a href='$link' download class='btn waves-effect waves-blue blue'>Parallel translation ( $lang ) </a></p>\n";
                             }
                         }
@@ -371,14 +403,18 @@ if ($lectures == null) {
                     <form id="download_<?php echo $modalname ?>" hidden>
 
                         <input type="checkbox" data-url="<?php echo $lecture_media_link ?>" checked hidden/>
-                        <?php if(file_exists($lecture_text_link)){ ?><input type="checkbox" data-url="<?php echo $lecture_text_link ?>" checked hidden/><?php }?>
-                        <?php if(file_exists($lecture_sync_link)){ ?><input type="checkbox" data-url="<?php echo $lecture_sync_link ?>" checked hidden/><?php }?>
+                        <?php if (file_exists($lecture_text_link)) { ?><input type="checkbox"
+                                                                              data-url="<?php echo $lecture_text_link ?>"
+                                                                              checked hidden/><?php } ?>
+                        <?php if (file_exists($lecture_sync_link)) { ?><input type="checkbox"
+                                                                              data-url="<?php echo $lecture_sync_link ?>"
+                                                                              checked hidden/><?php } ?>
                         <?php
 
                         if ($lecture['trans'] != "") {
                             foreach ($lecture['trans'] as $tran) {
                                 $link = $tran['trans_link'];
-                                if(file_exists($lecture_media_link)){
+                                if (file_exists($lecture_media_link)) {
                                     echo "\t\t\t\t<input type='checkbox' data-url='$link' checked hidden/>\n";
                                 }
                             }
@@ -679,10 +715,11 @@ if ($lectures == null) {
                     <div class='modal-content'>
                         <div class='modal-header'>
                             <h4><?php echo $lecture_name ?></h4>
-                            <?php if(isset($_SESSION['id'])){?>
+                            <?php if (isset($_SESSION['id'])) { ?>
                                 <a href='#' class=''
-                                   style='position: fixed; right: 3em; top: 0.5em; font-size: 2em;'><i class="material-icons">edit</i></a>
-                            <?php }?>
+                                   style='position: fixed; right: 3em; top: 0.5em; font-size: 2em;'><i
+                                            class="material-icons">edit</i></a>
+                            <?php } ?>
                             <a href='#' class='modal-close'
                                style='position: fixed; right: 1em; top: 0.5em; font-size: 2em;'>&times;</a></div>
 
@@ -694,32 +731,46 @@ if ($lectures == null) {
                         <p><strong>Description:</strong> <?php echo $lecture_desc ?></p>
                         <hr>
                         <h5>Download:</h5>
-                        <?php if(file_exists($lecture_media_link)){ ?><p><a href='<?php echo $lecture_media_link ?>' download class='btn waves-effect waves-blue blue'>Audio File</a></p><?php }?>
-                        <?php if(file_exists($lecture_text_link)){ ?><p><a href='<?php echo $lecture_text_link ?> ' download class='btn waves-effect waves-blue blue'>Original script File</a></p><?php }?>
-                        <?php if(file_exists($lecture_sync_link)){ ?><p><a href='<?php echo $lecture_sync_link ?> ' download class='btn waves-effect waves-blue blue'>Sync file</a></p><?php } ?>
+                        <?php if (file_exists($lecture_media_link)) { ?><p><a href='<?php echo $lecture_media_link ?>'
+                                                                              download
+                                                                              class='btn waves-effect waves-blue blue'>Audio
+                                File</a></p><?php } ?>
+                        <?php if (file_exists($lecture_text_link)) { ?><p><a href='<?php echo $lecture_text_link ?> '
+                                                                             download
+                                                                             class='btn waves-effect waves-blue blue'>Original
+                                script File</a></p><?php } ?>
+                        <?php if (file_exists($lecture_sync_link)) { ?><p><a href='<?php echo $lecture_sync_link ?> '
+                                                                             download
+                                                                             class='btn waves-effect waves-blue blue'>Sync
+                                file</a></p><?php } ?>
 
                         <?php
                         if ($lecture['trans'] != "") {
                             foreach ($lecture['trans'] as $tran) {
                                 $lang = $tran['l_name'];
                                 $link = $tran['trans_link'];
-                                if(file_exists($lecture_media_link)){
+                                if (file_exists($lecture_media_link)) {
                                     echo "\t\t\t\t<p><a href='$link' download class='btn waves-effect waves-blue blue'>Parallel translation ( $lang ) </a></p>\n";
-                                }                            }
+                                }
+                            }
                         }
                         ?>
 
                         <form id="download_<?php echo $modalname ?>" hidden>
 
                             <input type="checkbox" data-url="<?php echo $lecture_media_link ?>" checked hidden/>
-                            <?php if(file_exists($lecture_text_link)){ ?><input type="checkbox" data-url="<?php echo $lecture_text_link ?>" checked hidden/><?php }?>
-                            <?php if(file_exists($lecture_sync_link)){ ?><input type="checkbox" data-url="<?php echo $lecture_sync_link ?>" checked hidden/><?php }?>
+                            <?php if (file_exists($lecture_text_link)) { ?><input type="checkbox"
+                                                                                  data-url="<?php echo $lecture_text_link ?>"
+                                                                                  checked hidden/><?php } ?>
+                            <?php if (file_exists($lecture_sync_link)) { ?><input type="checkbox"
+                                                                                  data-url="<?php echo $lecture_sync_link ?>"
+                                                                                  checked hidden/><?php } ?>
                             <?php
 
                             if ($lecture['trans'] != "") {
                                 foreach ($lecture['trans'] as $tran) {
                                     $link = $tran['trans_link'];
-                                    if(file_exists($lecture_media_link)){
+                                    if (file_exists($lecture_media_link)) {
                                         echo "\t\t\t\t<input type='checkbox' data-url='$link' checked hidden/>\n";
                                     }
                                 }
@@ -801,7 +852,7 @@ if ($lectures == null) {
                 $lecture_name = $lecture['data']['name'];
                 $contributor = User::get_user_by_id($lecture['data']['user_id']);
 
-                if(isset($_SESSION['id'])){
+                if (isset($_SESSION['id'])) {
                     $is_starred = Lecture::is_starred($lecture_id, $_SESSION['id']);
                 }
 
@@ -810,12 +861,18 @@ if ($lectures == null) {
                     <div class='modal-content'>
                         <div class='modal-header'>
                             <h4><?php echo $lecture_name ?></h4>
-                            <?php if(isset($_SESSION['id'])){?>
-                                <?php if($_SESSION['id'] != $contributor['id']){ ?><a href="#!" class='star_btn' data-lectureid="<?php echo $lecture_id?>" data-userid="<?php echo $_SESSION['id']?>"
-                                                                                      style='position: fixed; right: 5em; top: 0.5em; font-size: 2em;'><i class="material-icons" id="star_icon_<?php echo $lecture_id?>"><?php if($is_starred) echo "star" ?><?php if(!$is_starred) echo "star_border"?></i></a><?php } ?>
+                            <?php if (isset($_SESSION['id'])) { ?>
+                                <?php if ($_SESSION['id'] != $contributor['id']) { ?><a href="#!" class='star_btn'
+                                                                                        data-lectureid="<?php echo $lecture_id ?>"
+                                                                                        data-userid="<?php echo $_SESSION['id'] ?>"
+                                                                                        style='position: fixed; right: 5em; top: 0.5em; font-size: 2em;'>
+                                    <i class="material-icons"
+                                       id="star_icon_<?php echo $lecture_id ?>"><?php if ($is_starred) echo "star" ?><?php if (!$is_starred) echo "star_border" ?></i>
+                                    </a><?php } ?>
                                 <a href='#' class=''
-                                   style='position: fixed; right: 3em; top: 0.5em; font-size: 2em;'><i class="material-icons">edit</i></a>
-                            <?php }?>
+                                   style='position: fixed; right: 3em; top: 0.5em; font-size: 2em;'><i
+                                            class="material-icons">edit</i></a>
+                            <?php } ?>
                             <a href='#' class='modal-close'
                                style='position: fixed; right: 1em; top: 0.5em; font-size: 2em;'>&times;</a></div>
 
@@ -827,11 +884,18 @@ if ($lectures == null) {
                         <p><strong>Description:</strong> <?php echo $lecture_desc ?></p>
                         <hr>
                         <h5>Download:</h5>
-                        <?php if(file_exists($lecture_media_link)){ ?><p><a href='<?php echo $lecture_media_link ?>' download class='btn waves-effect waves-blue blue'>Audio
-                                File</a></p><?php }?>
-                        <?php if(file_exists($lecture_text_link)){ ?><p><a href='<?php echo $lecture_text_link ?> ' download class='btn waves-effect waves-blue blue'>Original script
-                                File</a></p><?php }?>
-                        <?php if(file_exists($lecture_sync_link)){ ?><p><a href='<?php echo $lecture_sync_link ?> ' download class='btn waves-effect waves-blue blue'>Sync
+                        <?php if (file_exists($lecture_media_link)) { ?><p><a href='<?php echo $lecture_media_link ?>'
+                                                                              download
+                                                                              class='btn waves-effect waves-blue blue'>Audio
+                                File</a></p><?php } ?>
+                        <?php if (file_exists($lecture_text_link)) { ?><p><a href='<?php echo $lecture_text_link ?> '
+                                                                             download
+                                                                             class='btn waves-effect waves-blue blue'>Original
+                                script
+                                File</a></p><?php } ?>
+                        <?php if (file_exists($lecture_sync_link)) { ?><p><a href='<?php echo $lecture_sync_link ?> '
+                                                                             download
+                                                                             class='btn waves-effect waves-blue blue'>Sync
                                 file</a></p><?php } ?>
 
                         <?php
@@ -839,23 +903,28 @@ if ($lectures == null) {
                             foreach ($lecture['trans'] as $tran) {
                                 $lang = $tran['l_name'];
                                 $link = $tran['trans_link'];
-                                if(file_exists($lecture_media_link)){
+                                if (file_exists($lecture_media_link)) {
                                     echo "\t\t\t\t<p><a href='$link' download class='btn waves-effect waves-blue blue'>Parallel translation ( $lang ) </a></p>\n";
-                                }                            }
+                                }
+                            }
                         }
                         ?>
 
                         <form id="download_<?php echo $modalname ?>" hidden>
 
                             <input type="checkbox" data-url="<?php echo $lecture_media_link ?>" checked hidden/>
-                            <?php if(file_exists($lecture_text_link)){ ?><input type="checkbox" data-url="<?php echo $lecture_text_link ?>" checked hidden/><?php }?>
-                            <?php if(file_exists($lecture_sync_link)){ ?><input type="checkbox" data-url="<?php echo $lecture_sync_link ?>" checked hidden/><?php }?>
+                            <?php if (file_exists($lecture_text_link)) { ?><input type="checkbox"
+                                                                                  data-url="<?php echo $lecture_text_link ?>"
+                                                                                  checked hidden/><?php } ?>
+                            <?php if (file_exists($lecture_sync_link)) { ?><input type="checkbox"
+                                                                                  data-url="<?php echo $lecture_sync_link ?>"
+                                                                                  checked hidden/><?php } ?>
                             <?php
 
                             if ($lecture['trans'] != "") {
                                 foreach ($lecture['trans'] as $tran) {
                                     $link = $tran['trans_link'];
-                                    if(file_exists($lecture_media_link)){
+                                    if (file_exists($lecture_media_link)) {
                                         echo "\t\t\t\t<input type='checkbox' data-url='$link' checked hidden/>\n";
                                     }
                                 }
@@ -1062,11 +1131,14 @@ if ($lectures == null) {
                             <div class="input-field col s6 m4 offset-m2">
                                 <select id="lecture_diff" name="lecture_diff" required>
                                     <option value="" selected disabled>Choose level of difficulty...</option>
-                                    <option value="1" <?php if (isset($_POST['lecture_diff']) && $_POST['lecture_diff'] == 1) echo "selected" ?>>A
+                                    <option value="1" <?php if (isset($_POST['lecture_diff']) && $_POST['lecture_diff'] == 1) echo "selected" ?>>
+                                        A
                                     </option>
-                                    <option value="2" <?php if (isset($_POST['lecture_diff']) && $_POST['lecture_diff'] == 2) echo "selected" ?>>B
+                                    <option value="2" <?php if (isset($_POST['lecture_diff']) && $_POST['lecture_diff'] == 2) echo "selected" ?>>
+                                        B
                                     </option>
-                                    <option value="3" <?php if (isset($_POST['lecture_diff']) && $_POST['lecture_diff'] == 3) echo "selected" ?>>C
+                                    <option value="3" <?php if (isset($_POST['lecture_diff']) && $_POST['lecture_diff'] == 3) echo "selected" ?>>
+                                        C
                                     </option>
                                 </select>
                                 <label>Difficulty level</label>
@@ -1163,8 +1235,8 @@ if ($lectures == null) {
             $lec = Lecture::get_lecture_by_id($lid)[0];
 
             $lecture_created_by = User::get_user_by_id($lec['data']['user_id']);
-            if(strlen($lec['data']['text_link']) > 10) $text_user = User::get_user_by_id($lec['data']['text_contributor_id']);
-            if(strlen($lec['data']['sync_file_link']) > 10) $sync_user = User::get_user_by_id($lec['data']['sync_contributor_id']);
+            if (strlen($lec['data']['text_link']) > 10) $text_user = User::get_user_by_id($lec['data']['text_contributor_id']);
+            if (strlen($lec['data']['sync_file_link']) > 10) $sync_user = User::get_user_by_id($lec['data']['sync_contributor_id']);
 
             ?>
             <main style="margin: 3em 0">
@@ -1174,15 +1246,15 @@ if ($lectures == null) {
                     <div class="container">
                         <div class="row">
                             <div class="col s10 offset-s2">
-                                <h4><?php echo $lec['data']['name'] ." by <a href='profile.php?id=".$lecture_created_by['id']."'>".$lecture_created_by['username']."</a>" ?></h4>
+                                <h4><?php echo $lec['data']['name'] . " by <a href='profile.php?id=" . $lecture_created_by['id'] . "'>" . $lecture_created_by['username'] . "</a>" ?></h4>
                             </div>
                         </div>
                         <div class="row" style="margin-top: 3em">
                             <div class="input-field col s12 m8 offset-m2">
                                 <label for="lecture_title">Article title</label>
                                 <input type="text" id="lecture_title" name="lecture_title" required
-                                       value="<?php if (isset($_POST['lecture_title'])) echo $_POST['lecture_title']; else echo $lec['data']['name']?>"
-                                    <?php if($_SESSION['id'] != $lec['data']['user_id'] and $_SESSION['admin'] == 0) echo "readonly" ?>>
+                                       value="<?php if (isset($_POST['lecture_title'])) echo $_POST['lecture_title']; else echo $lec['data']['name'] ?>"
+                                    <?php if ($_SESSION['id'] != $lec['data']['user_id'] and $_SESSION['admin'] == 0) echo "readonly" ?>>
                             </div>
                         </div>
 
@@ -1190,7 +1262,7 @@ if ($lectures == null) {
                             <div class="input-field col s12 m8 offset-m2">
                                 <textarea id="lecture_description" class="materialize-textarea"
                                           name="lecture_description"
-                                        <?php if($_SESSION['id'] != $lec['data']['user_id'] and $_SESSION['admin'] == 0) echo "readonly" ?>><?php if (isset($_POST['lecture_description'])) echo $_POST['lecture_description']; else echo $lec['data']['description'] ?></textarea>
+                                        <?php if ($_SESSION['id'] != $lec['data']['user_id'] and $_SESSION['admin'] == 0) echo "readonly" ?>><?php if (isset($_POST['lecture_description'])) echo $_POST['lecture_description']; else echo $lec['data']['description'] ?></textarea>
                                 <label for="lecture_description">Article Description</label>
                             </div>
                         </div>
@@ -1199,11 +1271,14 @@ if ($lectures == null) {
                             <div class="input-field col s6 m4 offset-m2">
                                 <select id="lecture_diff" name="lecture_diff" required>
                                     <option value="" selected disabled>Choose level of difficulty...</option>
-                                    <option value="1" <?php if($_SESSION['id'] != $lec['data']['user_id'] and $_SESSION['admin'] == 0 and $lec['data']['difficulty'] != 1) echo "disabled" ?> <?php if (isset($_POST['lecture_diff']) && $_POST['lecture_diff'] == 1 or $lec['data']['difficulty'] == 1) echo "selected" ?>>A
+                                    <option value="1" <?php if ($_SESSION['id'] != $lec['data']['user_id'] and $_SESSION['admin'] == 0 and $lec['data']['difficulty'] != 1) echo "disabled" ?> <?php if (isset($_POST['lecture_diff']) && $_POST['lecture_diff'] == 1 or $lec['data']['difficulty'] == 1) echo "selected" ?>>
+                                        A
                                     </option>
-                                    <option value="2" <?php if($_SESSION['id'] != $lec['data']['user_id'] and $_SESSION['admin'] == 0 and $lec['data']['difficulty'] != 2) echo "disabled" ?> <?php if (isset($_POST['lecture_diff']) && $_POST['lecture_diff'] == 2 or $lec['data']['difficulty'] == 2) echo "selected" ?>>B
+                                    <option value="2" <?php if ($_SESSION['id'] != $lec['data']['user_id'] and $_SESSION['admin'] == 0 and $lec['data']['difficulty'] != 2) echo "disabled" ?> <?php if (isset($_POST['lecture_diff']) && $_POST['lecture_diff'] == 2 or $lec['data']['difficulty'] == 2) echo "selected" ?>>
+                                        B
                                     </option>
-                                    <option value="3" <?php if($_SESSION['id'] != $lec['data']['user_id'] and $_SESSION['admin'] == 0 and $lec['data']['difficulty'] != 3) echo "disabled" ?> <?php if (isset($_POST['lecture_diff']) && $_POST['lecture_diff'] == 3 or $lec['data']['difficulty'] == 3) echo "selected" ?>>C
+                                    <option value="3" <?php if ($_SESSION['id'] != $lec['data']['user_id'] and $_SESSION['admin'] == 0 and $lec['data']['difficulty'] != 3) echo "disabled" ?> <?php if (isset($_POST['lecture_diff']) && $_POST['lecture_diff'] == 3 or $lec['data']['difficulty'] == 3) echo "selected" ?>>
+                                        C
                                     </option>
                                 </select>
                                 <label>Difficulty level</label>
@@ -1215,7 +1290,7 @@ if ($lectures == null) {
                                     foreach ($languages as $language) {
                                         ?>
                                         <option value="<?php echo $language['id'] ?>"
-                                            <?php if($_SESSION['id'] != $lec['data']['user_id'] and $_SESSION['admin'] == 0 and $lec['data']['language_id'] != $language['id']) echo "disabled" ?>
+                                            <?php if ($_SESSION['id'] != $lec['data']['user_id'] and $_SESSION['admin'] == 0 and $lec['data']['language_id'] != $language['id']) echo "disabled" ?>
                                             <?php if (isset($_POST['lecture_lang']) && $_POST['lecture_lang'] == $language['id'] or $lec['data']['language_id'] == $language['id']) echo "selected" ?>><?php echo $language['name'] ?></option>
                                         <?php
                                     }
@@ -1227,17 +1302,17 @@ if ($lectures == null) {
 
                         <div class="row">
                             <div class="col s5 offset-s2">
-                                <a href="<?php echo $lec['data']['audio_link'] ?>" download class="btn grey" style="width: 100%"><?php echo explode("/",$lec['data']['audio_link'])[2] ?></a>
+                                <a href="<?php echo $lec['data']['audio_link'] ?>" download class="btn grey"
+                                   style="width: 100%"><?php echo explode("/", $lec['data']['audio_link'])[2] ?></a>
                             </div>
                             <div class="col s4 m4">
-                                <?php if($_SESSION['admin'] != 1){ ?><span class="grey-text">You cant change audio file. If you need to change it please contact system administrator</span><?php } ?>
+                                <?php if ($_SESSION['admin'] != 1) { ?><span class="grey-text">You cant change audio file. If you need to change it please contact system administrator</span><?php } ?>
                             </div>
-                            <?php if($_SESSION['admin'] == 1){ ?>
+                            <?php if ($_SESSION['admin'] == 1) { ?>
                                 <div class="file-field input-field col s12 m8 offset-m2">
                                     <div class="btn">
                                         <span>Audio</span>
-                                        <input type="file" name='lecture_media' id='lecture_media' accept="audio/*"
-                                               required>
+                                        <input type="file" name='lecture_media' id='lecture_media' accept="audio/*">
                                     </div>
                                     <div class="file-path-wrapper">
                                         <input class="file-path validate" type="text">
@@ -1247,18 +1322,29 @@ if ($lectures == null) {
                         </div>
 
                         <div class="row">
-                            <?php if(strlen($lec['data']['text_link']) > 10){ ?>
-                                <div class="col s5 offset-s2">
-                                    <a href="<?php echo $lec['data']['text_link'] ?>" download class="btn grey" style="width: 100%"> <?php echo explode("/",$lec['data']['text_link'])[2] ?></a>
-                                </div>
-                                <div class="col s4 m4">
-                                    <span class="grey-text">Original script by <a href="profile.php?id=<?php echo $text_user['id'] ?>"><?php echo $text_user['username'] ?></a>
-                                        <?php if(strlen($lec['data']['text_link']) > 10 and $text_user['id'] != $_SESSION['id']) echo "<br> You can't change file that you have not contributed yourself. Contact its contributor for collaboration."?>
+                            <?php if (strlen($lec['data']['text_link']) > 10) { ?>
+                                <div id="lect_script_file_add_wrap">
+                                    <div class="col s5 offset-s2">
+                                        <a href="<?php echo $lec['data']['text_link'] ?>" download class="btn grey"
+                                           style="width: 100%"> <?php echo explode("/", $lec['data']['text_link'])[2] ?></a>
+                                    </div>
+                                    <?php if ($text_user['id'] == $_SESSION['id'] or $_SESSION['admin'] == 1) { ?>
+                                        <div class="col s1">
+                                            <button type="button" class="btn red lecture_delete_file"
+                                                    data-id="<?php echo $lec['data']['id'] ?>" data-file-type="1"><i
+                                                        class="material-icons">delete</i></button>
+                                        </div>
+                                    <?php } ?>
+                                    <div class="col s4 m4">
+                                    <span class="grey-text">Original script by <a
+                                                href="profile.php?id=<?php echo $text_user['id'] ?>"><?php echo $text_user['username'] ?></a>
+                                        <?php if (strlen($lec['data']['text_link']) > 10 and $text_user['id'] != $_SESSION['id'] and $_SESSION['admin'] != 1) echo "<br> You can't change file that you have not contributed yourself. Contact its contributor for collaboration." ?>
                                     </span>
+                                    </div>
                                 </div>
                             <?php } ?>
 
-                            <?php if((strlen($lec['data']['text_link']) > 10 and $text_user['id'] == $_SESSION['id']) or strlen($lec['data']['text_link']) < 3 or $_SESSION['admin'] == 1){?>
+                            <?php if ((strlen($lec['data']['text_link']) > 10 and $text_user['id'] == $_SESSION['id']) or strlen($lec['data']['text_link']) < 3 or $_SESSION['admin'] == 1) { ?>
                                 <div class="file-field input-field col s10 m8 offset-m2">
                                     <div class="btn">
                                         <span>Original script</span>
@@ -1268,23 +1354,34 @@ if ($lectures == null) {
                                         <input class="file-path validate" type="text">
                                     </div>
                                 </div>
-                            <?php }?>
+                            <?php } ?>
                         </div>
 
                         <div class="row">
-                            <?php if(strlen($lec['data']['sync_file_link']) > 10){ ?>
-                                <div class="col s5 offset-s2">
-                                    <a href="<?php echo $lec['data']['sync_file_link'] ?>" download class="btn grey" style="width: 100%"> <?php echo explode("/",$lec['data']['sync_file_link'])[2] ?></a>
-                                </div>
-                                <div class="col s4 m4">
-                                    <span class="grey-text">Sync file by <a href="profile.php?id=<?php echo $sync_user['id'] ?>"><?php echo $sync_user['username'] ?></a
-                                        <?php if(strlen($lec['data']['text_link']) > 10 and $text_user['id'] != $_SESSION['id']) echo "<br> You can't change file that you have not contributed yourself. Contact its contributor for collaboration."?>
+                            <?php if (strlen($lec['data']['sync_file_link']) > 10) { ?>
+                                <div id="lect_sync_file_add_wrap">
+                                    <div class="col s5 offset-s2">
+                                        <a href="<?php echo $lec['data']['sync_file_link'] ?>" download class="btn grey"
+                                           style="width: 100%"> <?php echo explode("/", $lec['data']['sync_file_link'])[2] ?></a>
+                                    </div>
+                                    <?php if ($sync_user['id'] == $_SESSION['id'] or $_SESSION['admin'] == 1) { ?>
+                                        <div class="col s1">
+                                            <button type="button" class="btn red lecture_delete_file"
+                                                    data-id="<?php echo $lec['data']['id'] ?>" data-file-type="2"><i
+                                                        class="material-icons">delete</i></button>
+                                        </div>
+                                    <?php } ?>
+                                    <div class="col s4 m4">
+                                    <span class="grey-text">Sync file by <a
+                                                href="profile.php?id=<?php echo $sync_user['id'] ?>"><?php echo $sync_user['username'] ?></a>
+                                        <?php if (strlen($lec['data']['text_link']) > 10 and $sync_user['id'] != $_SESSION['id'] and $_SESSION['admin'] != 1) echo "<br> You can't change file that you have not contributed yourself. Contact its contributor for collaboration." ?>
                                     </span>
 
+                                    </div>
                                 </div>
                             <?php } ?>
 
-                            <?php if((strlen($lec['data']['sync_file_link']) > 10 and $sync_user['id'] == $_SESSION['id']) or strlen($lec['data']['sync_file_link']) < 3 or $_SESSION['admin'] == 1){?>
+                            <?php if ((strlen($lec['data']['sync_file_link']) > 10 and $sync_user['id'] == $_SESSION['id']) or strlen($lec['data']['sync_file_link']) < 3 or $_SESSION['admin'] == 1) { ?>
                                 <div class="file-field input-field col s12 m8 offset-m2">
                                     <div class="btn">
                                         <span>Sync file</span>
@@ -1294,19 +1391,28 @@ if ($lectures == null) {
                                         <input class="file-path validate" type="text">
                                     </div>
                                 </div>
-                            <?php }?>
+                            <?php } ?>
                         </div>
 
-                        <?php if($lec['trans'] != NULL){
-                            foreach ($lec['trans'] as $trans){
+                        <?php if ($lec['trans'] != NULL) {
+                            foreach ($lec['trans'] as $trans) {
                                 $trans_user = User::get_user_by_id($trans['contributor_id']);
                                 ?>
-                                <div class="row">
+                                <div class="row" id="trans_div_<?php echo $trans['id'] ?>">
                                     <div class="col s5 offset-s2">
-                                        <a href="<?php echo $trans['trans_link'] ?>" download class="btn grey" style="width: 100%;"><?php echo explode("/",$trans['trans_link'])[2] . " (".$trans['l_name'].")" ?></a>
+                                        <a href="<?php echo $trans['trans_link'] ?>" download class="btn grey"
+                                           style="width: 100%;"><?php echo explode("/", $trans['trans_link'])[2] . " (" . $trans['l_name'] . ")" ?></a>
                                     </div>
-                                    <div class="col s4 m4">
-                                        <span class="grey-text">Parallel translation by <a href="profile.php?id=<?php echo $trans_user['id'] ?>"><?php echo $trans_user['username'] ?></a></span>
+                                    <?php if ($trans_user['id'] == $_SESSION['id'] or $_SESSION['admin'] == 1) { ?>
+                                        <div class="col s1">
+                                            <button type="button" class="btn red trans_delete"
+                                                    data-id="<?php echo $trans['id'] ?>"><i
+                                                        class="material-icons">delete</i></button>
+                                        </div>
+                                    <?php } ?>
+                                    <div class="col s4">
+                                        <span class="grey-text">Parallel translation by <a
+                                                    href="profile.php?id=<?php echo $trans_user['id'] ?>"><?php echo $trans_user['username'] ?></a></span>
                                     </div>
                                 </div>
                                 <?php
@@ -1331,7 +1437,7 @@ if ($lectures == null) {
                                     <i class="material-icons right">check</i></button>
                             </div>
                             <div class="input-field col s6 m3">
-                                <a href="index.php" class="btn red lighten-2 waves-effect">Discard article
+                                <a href="index.php" class="btn red lighten-2 waves-effect">Discard changes
                                     <i class="material-icons right">clear</i></a>
                             </div>
                         </div>
@@ -1632,32 +1738,32 @@ if ($lectures == null) {
                 }
 
 
-                /**
-                 *  prints list of all users for admin to manage
-                 */
-                public static function admin_users()
-                {
-                    ?>
-                    <main style="margin: 3em 0">
-                        <div class="container">
-                            <table>
-                                <thead>
+        /**
+         *  prints list of all users for admin to manage
+         */
+        public static function admin_users()
+        {
+            ?>
+            <main style="margin: 3em 0">
+                <div class="container">
+                    <table>
+                        <thead>
 
-                                </thead>
-                                <tbody>
-                                <?php
+                        </thead>
+                        <tbody>
+                        <?php
 
-                                ?>
+                        ?>
 
-                                <?php
-                                ?>
-                                </tbody>
-                            </table>
-                        </div>
-                    </main>
-                    <?php
-                }
+                        <?php
+                        ?>
+                        </tbody>
+                    </table>
+                </div>
+            </main>
+            <?php
+        }
 
-                }
+        }
 
-                ?>
+        ?>

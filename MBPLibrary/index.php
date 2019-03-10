@@ -159,7 +159,6 @@ Page::page_footer();
                 else if(data.mode == "DEL"){
                     $('#star_icon_'+$lec_id).html("star_border");
                 }
-                console.log(data);
             }
         })
     }
